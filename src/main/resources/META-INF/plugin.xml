@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>com.github.motui.meicanintellijplugin</id>
-    <name>meican-intellij-plugin</name>
+    <id>com.github.motui.meican</id>
+    <name>MeiCan</name>
     <vendor>motui</vendor>
 
     <!-- Product and plugin compatibility requirements -->
@@ -8,12 +8,16 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.motui.meicanintellijplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.motui.meicanintellijplugin.services.MyProjectService"/>
+        <applicationService serviceImplementation="com.github.motui.meican.setting.SettingService"/>
+        <applicationConfigurable implementation="com.github.motui.meican.setting.SettingEntity"/>
+        <toolWindow id="order" anchor="right" secondary="true"
+                    factoryClass="com.github.motui.meican.order.OrderToolWindowFactory"/>
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.motui.meicanintellijplugin.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+
     </applicationListeners>
+    <actions>
+
+    </actions>
 </idea-plugin>
