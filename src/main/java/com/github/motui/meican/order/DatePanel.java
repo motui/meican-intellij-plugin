@@ -3,6 +3,8 @@ package com.github.motui.meican.order;
 import com.github.motui.meican.api.model.Address;
 import com.github.motui.meican.api.model.Dish;
 import com.github.motui.meican.api.model.MeiCanPanelData;
+import com.github.motui.meican.api.model.vo.AddOrderVO;
+import com.github.motui.meican.api.model.vo.CalendarDishVO;
 import com.intellij.openapi.ui.Messages;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -24,7 +26,6 @@ public class DatePanel {
   private JComboBox<Address> addressComboBox;
   private JSplitPane splitPane;
   private JButton okButton;
-  // private JTable orderTable;
 
   public DatePanel(MeiCanPanelData.DateData dateData) {
     this.corePanel.setVisible(false);
@@ -33,7 +34,7 @@ public class DatePanel {
     if (open) {
       this.renderOpenUi(dateData);
     } else {
-      this.renderCloseUi();
+      this.renderCloseUi(dateData);
     }
   }
 
@@ -59,19 +60,28 @@ public class DatePanel {
         Messages.showMessageDialog(this.rootPanel.getParent(), "地址未选择", "下单警告", null);
         return;
       }
+      AddOrderVO addOrderVO = new AddOrderVO(dateData.getUserTab().getUniqueId(),
+          address.getUniqueId(), dateData.getTargetTime(), dish.getId());
       // 二次确认
-      System.out.println("可以下单");
       OrderDialog orderDialog = new OrderDialog(dateData.getTitle(), restaurantData.getName(),
-          dish.getName(), address.getPickUpLocation());
+          dish.getName(), address.getPickUpLocation(), addOrderVO);
       orderDialog.setLocationRelativeTo(this.rootPanel.getParent());
       orderDialog.pack();
       orderDialog.setVisible(true);
     });
   }
 
-  private void renderCloseUi() {
-    this.tipsPanel.setVisible(true);
+  private void renderCloseUi(MeiCanPanelData.DateData dateData) {
+    if (dateData.isOrder()) {
+      // 已下单
+      CalendarDishVO dish = dateData.getDish();
+      this.tips.setText("订单:\n"
+          + dish.getName()
+      );
+      return;
+    }
     this.tips.setText("订餐时间已过，已关闭");
+    this.tipsPanel.setVisible(true);
   }
 
   private void restaurantUi(List<MeiCanPanelData.RestaurantData> restaurants) {

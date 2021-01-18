@@ -17,4 +17,5 @@ public class Constants {
   public static final String URL_CALENDAR = MEI_CAN_BASE_URL + "/preorder/api/v2.1/calendaritems/list";
   public static final String URL_RESTAURANTS = MEI_CAN_BASE_URL + "/preorder/api/v2.1/restaurants/list";
   public static final String URL_RESTAURANTS_SHOW = MEI_CAN_BASE_URL + "/preorder/api/v2.1/restaurants/show";
+  public static final String URL_ADD_ORDER = MEI_CAN_BASE_URL + "/preorder/api/v2.1/orders/add";
 }

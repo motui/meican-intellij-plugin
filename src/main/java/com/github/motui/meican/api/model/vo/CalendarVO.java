@@ -68,7 +68,7 @@ public class CalendarVO {
     private UserTabVO userTab;
     private OpeningTime openingTime;
     /**
-     * CLOSED/AVAILABLE
+     * CLOSED/AVAILABLE/ORDER
      */
     private String status;
     private String reason;

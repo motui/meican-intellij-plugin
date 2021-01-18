@@ -1,15 +1,18 @@
 package com.github.motui.meican.api;
 
 import com.github.motui.meican.Constants;
+import com.github.motui.meican.api.model.AddOrderResponse;
 import com.github.motui.meican.api.model.Address;
 import com.github.motui.meican.api.model.Dish;
 import com.github.motui.meican.api.model.MeiCanPanelData;
+import com.github.motui.meican.api.model.vo.CalendarRestaurantVO;
 import com.github.motui.meican.api.model.vo.CalendarVO;
 import com.github.motui.meican.api.model.vo.LoginVO;
 import com.github.motui.meican.api.model.vo.RestaurantDishVO;
 import com.github.motui.meican.api.model.vo.RestaurantVO;
 import com.github.motui.meican.api.model.vo.UserTabVO;
 import com.github.motui.meican.exception.HttpRequestException;
+import com.github.motui.meican.exception.MeiCanAddOrderException;
 import com.github.motui.meican.exception.MeiCanLoginException;
 import com.github.motui.meican.setting.Setting;
 import com.github.motui.meican.setting.SettingService;
@@ -17,6 +20,7 @@ import com.github.motui.meican.util.JsonUtil;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.intellij.openapi.components.ServiceManager;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +42,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +135,7 @@ public class MeiCanClient {
     Map<String, Object> urlParameter = this.createUrlParameter();
     urlParameter.put("beginDate", startDate);
     urlParameter.put("endDate", endDate);
-    urlParameter.put("withOrderDetail", true);
+    urlParameter.put("withOrderDetail", false);
     try {
       String response = this.get(Constants.URL_CALENDAR, urlParameter);
       return JsonUtil.from(response, CalendarVO.class);
@@ -160,6 +166,8 @@ public class MeiCanClient {
   }
 
   /**
+   * 菜单
+   *
    * @param userTableUniqueId  {@link UserTabVO#getUniqueId()}
    * @param targetTime         {@link CalendarVO.CalendarItem#getTargetTime()}
    * @param restaurantUniqueId {@link RestaurantDishVO#getUniqueId()}
@@ -180,6 +188,49 @@ public class MeiCanClient {
     }
   }
 
+  /**
+   * 下单
+   *
+   * @param userTableUniqueId {@link UserTabVO#getUniqueId()}
+   * @param addressUniqueId   {@link Address#getUniqueId()}
+   * @param targetTime        {@link CalendarVO.CalendarItem#getTargetTime()}
+   * @param dishId            {@link Dish#getId()}
+   */
+  public void order(String userTableUniqueId, String addressUniqueId, Long targetTime, Long dishId) {
+    List<BasicNameValuePair> parameters = new ArrayList<>();
+    parameters.add(new BasicNameValuePair("corpAddressRemark", ""));
+    parameters.add(new BasicNameValuePair("corpAddressUniqueId", addressUniqueId));
+    List<HashMap<String, Object>> order = Collections.singletonList(new HashMap<String, Object>(2) {
+      {
+        put("count", 1);
+        put("dishId", dishId);
+      }
+    });
+    parameters.add(new BasicNameValuePair("order", "[{\"count\":1,\"dishId\":" + dishId + "}]"));
+    List<HashMap<String, Object>> remarks = Collections.singletonList(new HashMap<String, Object>(2) {
+      {
+        put("dishId", dishId);
+        put("remark", "1");
+      }
+    });
+    parameters.add(new BasicNameValuePair("remarks", "[{\"dishId\":\"" + dishId + "\",\"remark\":\"\"}]"));
+    parameters.add(new BasicNameValuePair("tabUniqueId", userTableUniqueId));
+    String formatTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(targetTime), ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    parameters.add(new BasicNameValuePair("targetTime", formatTime));
+    parameters.add(new BasicNameValuePair("userAddressUniqueId", addressUniqueId));
+    Map<String, Object> urlParameter = this.createUrlParameter();
+    try {
+      String responseStr = this.post(Constants.URL_ADD_ORDER, urlParameter, parameters);
+      AddOrderResponse addOrderResponse = JsonUtil.from(responseStr, AddOrderResponse.class);
+      if (!addOrderResponse.isSuccess()) {
+        throw new MeiCanAddOrderException("order error." + responseStr);
+      }
+    } catch (IOException e) {
+      throw new HttpRequestException(Constants.URL_ADD_ORDER + " request error", e);
+    }
+  }
+
   public MeiCanPanelData getMeiCanPanelData(LocalDateTime targetDateTime) {
     // 可点菜单
     String time = targetDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -191,13 +242,30 @@ public class MeiCanClient {
     CalendarVO.DateItem dateItem = calendar.getDateList().get(0);
     List<MeiCanPanelData.DateData> dateDataList = dateItem.getCalendarItemList().stream().map(calendarItem -> {
       MeiCanPanelData.DateData dateData = new MeiCanPanelData.DateData();
-      dateData.setTitle(calendarItem.getTitle());
-      dateData.setOpen(calendarItem.isOpen());
       UserTabVO userTab = calendarItem.getUserTab();
       Long targetTime = calendarItem.getTargetTime();
+
+      dateData.setTitle(calendarItem.getTitle());
+      dateData.setOpen(calendarItem.isOpen());
+      dateData.setUserTab(userTab);
+      dateData.setTargetTime(targetTime);
       // 地址数据
       List<Address> addressList = userTab.getCorp().getAddressList();
       dateData.setAddressList(addressList);
+
+      // 状态和理由
+      dateData.setStatus(calendarItem.getStatus());
+      dateData.setReason(calendarItem.getReason());
+
+      // 已下单信息
+      if (Objects.nonNull(calendarItem.getCorpOrderUser()) &&
+          CollectionUtils.isNotEmpty(calendarItem.getCorpOrderUser().getRestaurantItemList())) {
+        CalendarRestaurantVO calendarRestaurantVO = calendarItem.getCorpOrderUser().getRestaurantItemList().get(0);
+        if (CollectionUtils.isNotEmpty(calendarRestaurantVO.getDishItemList())) {
+          dateData.setDish(calendarRestaurantVO.getDishItemList().get(0).getDish());
+        }
+      }
+
       List<MeiCanPanelData.RestaurantData> restaurantDataList = new ArrayList<>();
       if (calendarItem.isOpen()) {
         // 餐厅数据
@@ -241,9 +309,7 @@ public class MeiCanClient {
   private String createUrl(String url, Map<String, Object> urlParameter) {
     if (MapUtils.isNotEmpty(urlParameter)) {
       List<String> parameter = new ArrayList<>();
-      urlParameter.forEach((k, v) -> {
-        parameter.add(String.format("%s=%s", k, v));
-      });
+      urlParameter.forEach((k, v) -> parameter.add(String.format("%s=%s", k, v)));
       url = String.format("%s?%s", url, StringUtils.join(parameter, "&"));
     }
     return url;

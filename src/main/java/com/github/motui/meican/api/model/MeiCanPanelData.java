@@ -1,5 +1,8 @@
 package com.github.motui.meican.api.model;
 
+import com.github.motui.meican.api.model.vo.CalendarDishVO;
+import com.github.motui.meican.api.model.vo.UserTabVO;
+
 import java.util.List;
 
 /**
@@ -24,8 +27,45 @@ public class MeiCanPanelData {
   public static class DateData {
     private String title;
     private Boolean open;
+    private String status;
+    private String reason;
     private List<RestaurantData> restaurants;
     private List<Address> addressList;
+    private Long targetTime;
+    private UserTabVO userTab;
+
+    /**
+     * 已下单信息
+     */
+    private CalendarDishVO dish;
+
+    public boolean isOrder() {
+      return "AVAILABLE".equals(status) || "ORDER".equals(status);
+    }
+
+    public CalendarDishVO getDish() {
+      return dish;
+    }
+
+    public void setDish(CalendarDishVO dish) {
+      this.dish = dish;
+    }
+
+    public Long getTargetTime() {
+      return targetTime;
+    }
+
+    public void setTargetTime(Long targetTime) {
+      this.targetTime = targetTime;
+    }
+
+    public UserTabVO getUserTab() {
+      return userTab;
+    }
+
+    public void setUserTab(UserTabVO userTab) {
+      this.userTab = userTab;
+    }
 
     public String getTitle() {
       return title;
@@ -57,6 +97,22 @@ public class MeiCanPanelData {
 
     public void setAddressList(List<Address> addressList) {
       this.addressList = addressList;
+    }
+
+    public String getStatus() {
+      return status;
+    }
+
+    public void setStatus(String status) {
+      this.status = status;
+    }
+
+    public String getReason() {
+      return reason;
+    }
+
+    public void setReason(String reason) {
+      this.reason = reason;
     }
   }
 
