@@ -1,17 +1,17 @@
 <idea-plugin>
     <id>com.github.motui.meican</id>
     <name>MeiCan</name>
-    <vendor>motui</vendor>
+    <vendor>MoTui</vendor>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.motui.meican.setting.SettingService"/>
-        <applicationConfigurable implementation="com.github.motui.meican.setting.SettingEntity"/>
-        <toolWindow id="order" anchor="right" secondary="true"
-                    factoryClass="com.github.motui.meican.order.OrderToolWindowFactory"/>
+        <applicationService serviceImplementation="cn.motui.meican.setting.SettingService"/>
+        <applicationConfigurable implementation="cn.motui.meican.setting.SettingEntity"/>
+        <toolWindow id="Mei Can" anchor="right" secondary="true"
+                    factoryClass="cn.motui.meican.order.OrderToolWindowFactory"/>
     </extensions>
 
     <applicationListeners>
