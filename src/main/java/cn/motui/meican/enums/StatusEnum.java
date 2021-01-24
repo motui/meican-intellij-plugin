@@ -1,4 +1,4 @@
-package cn.motui.meican.model;
+package cn.motui.meican.enums;
 
 /**
  * @author it.motui

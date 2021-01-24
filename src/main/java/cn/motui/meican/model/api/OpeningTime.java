@@ -11,19 +11,19 @@ public class OpeningTime {
   private String uniqueId;
   private String name;
   /**
-   * 00:00
+   * 可订餐餐时间
    */
   private String openTime;
   /**
-   * 10:00
+   * 关闭订单时间
    */
   private String closeTime;
   /**
-   * 09:30
+   * 默认提醒时间
    */
   private String defaultAlarmTime;
   /**
-   * 11:30
+   * 邮箱提醒时间
    */
   private String postboxOpenTime;
 

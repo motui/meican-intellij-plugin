@@ -1,17 +1,17 @@
 package cn.motui.meican;
 
-import cn.motui.meican.model.api.Dish;
-import cn.motui.meican.model.api.vo.CalendarVO;
-import cn.motui.meican.model.api.vo.RestaurantDishVO;
 import cn.motui.meican.exception.HttpRequestException;
 import cn.motui.meican.exception.MeiCanAddOrderException;
 import cn.motui.meican.exception.MeiCanLoginException;
 import cn.motui.meican.model.api.Account;
+import cn.motui.meican.model.api.Dish;
 import cn.motui.meican.model.api.vo.AddOrderResponseVO;
 import cn.motui.meican.model.api.vo.AddressVO;
+import cn.motui.meican.model.api.vo.CalendarVO;
 import cn.motui.meican.model.api.vo.CorpAddressVO;
 import cn.motui.meican.model.api.vo.LoginVO;
 import cn.motui.meican.model.api.vo.OrderDetailVO;
+import cn.motui.meican.model.api.vo.RestaurantDishVO;
 import cn.motui.meican.model.api.vo.RestaurantVO;
 import cn.motui.meican.model.api.vo.UserTabVO;
 import cn.motui.meican.setting.Setting;
@@ -51,22 +51,26 @@ import java.util.Objects;
 public class MeiCanClient {
   private String username;
   private String password;
+  private Boolean verification = false;
   private final HttpClient httpClient;
 
-  private static final MeiCanClient INSTANCE;
-
-  static {
-    SettingService service = ServiceManager.getService(SettingService.class);
-    Setting state = service.getState();
-    if (Objects.isNull(state)) {
-      INSTANCE = new MeiCanClient(null, null);
-    } else {
-      INSTANCE = new MeiCanClient(state.getUsername(), state.getPassword());
-    }
-  }
+  private static volatile MeiCanClient meiCanClient;
 
   public static MeiCanClient instance() {
-    return INSTANCE;
+    if (Objects.isNull(meiCanClient)) {
+      synchronized (MeiCanClient.class) {
+        if (Objects.isNull(meiCanClient)) {
+          SettingService service = ServiceManager.getService(SettingService.class);
+          Setting state = service.getState();
+          if (Objects.isNull(state)) {
+            meiCanClient = new MeiCanClient(null, null);
+          } else {
+            meiCanClient = new MeiCanClient(state.getUsername(), state.getPassword());
+          }
+        }
+      }
+    }
+    return meiCanClient;
   }
 
   private MeiCanClient(String username, String password) {
@@ -78,6 +82,7 @@ public class MeiCanClient {
       return;
     }
     this.login();
+    this.verification = true;
   }
 
   public void refresh(String username, String password) {
@@ -85,6 +90,7 @@ public class MeiCanClient {
       this.username = username;
       this.password = password;
       this.login();
+      this.verification = true;
     }
   }
 
@@ -141,14 +147,14 @@ public class MeiCanClient {
   /**
    * 可点菜单
    *
-   * @param startDate 开始时间 yyyy-MM-dd
-   * @param endDate   结束时间 yyyy-MM-dd, 最大值startDate + 7
+   * @param startDateTime 开始时间
+   * @param endDateTime   结束时间
    * @return Calendar
    */
-  public CalendarVO calendar(String startDate, String endDate) {
+  public CalendarVO calendar(LocalDateTime startDateTime, LocalDateTime endDateTime) {
     Map<String, Object> urlParameter = this.createUrlParameter();
-    urlParameter.put("beginDate", startDate);
-    urlParameter.put("endDate", endDate);
+    urlParameter.put("beginDate", startDateTime.format(Constants.FORMATTER_RECORD_MEI_CAN));
+    urlParameter.put("endDate", endDateTime.format(Constants.FORMATTER_RECORD_MEI_CAN));
     urlParameter.put("withOrderDetail", false);
     try {
       String response = this.get(Constants.URL_CALENDAR, urlParameter);
@@ -220,16 +226,16 @@ public class MeiCanClient {
     }
   }
 
-
   /**
    * 下单
    *
    * @param userTabUniqueId {@link UserTabVO#getUniqueId()}
-   * @param addressUniqueId   {@link AddressVO#getUniqueId()}
-   * @param targetTime        {@link CalendarVO.CalendarItem#getTargetTime()}
-   * @param dishId            {@link Dish#getId()}
+   * @param addressUniqueId {@link AddressVO#getUniqueId()}
+   * @param targetTime      {@link CalendarVO.CalendarItem#getTargetTime()}
+   * @param dishId          {@link Dish#getId()}
+   * @return 订单ID
    */
-  public void order(String userTabUniqueId, String addressUniqueId, LocalDateTime targetTime, Long dishId) {
+  public String order(String userTabUniqueId, String addressUniqueId, LocalDateTime targetTime, Long dishId) {
     List<BasicNameValuePair> parameters = new ArrayList<>();
     parameters.add(new BasicNameValuePair("corpAddressRemark", ""));
     parameters.add(new BasicNameValuePair("corpAddressUniqueId", addressUniqueId));
@@ -246,6 +252,7 @@ public class MeiCanClient {
       if (!addOrderResponseVO.isSuccess()) {
         throw new MeiCanAddOrderException("order error." + responseStr);
       }
+      return addOrderResponseVO.getOrder().getUniqueId();
     } catch (IOException e) {
       throw new HttpRequestException(Constants.URL_ADD_ORDER + " request error", e);
     }

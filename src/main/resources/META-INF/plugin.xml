@@ -1,17 +1,45 @@
 <idea-plugin>
     <id>com.github.motui.meican</id>
     <name>Mei Can</name>
-    <vendor email="it.motuis@gmail.com" url="https://github.com/motui">it.motuis</vendor>
+    <vendor email="it.motuis@gmail.com" url="https://github.com/motui">it.motui</vendor>
 
+    <description><![CDATA[
+      <p><b>MeiCan plugin for IntelliJ based IDEs.</b></p>
+      <br/>
+      <p>
+      <b>
+      <a href="https://github.com/motui/meican-intellij-plugin">GitHub</a> |
+      <a href="https://github.com/motui/meican-intellij-plugin/issues">Issues</a> |
+      </b>
+      </p>
+      <br/>
+      <p><b>Features:</b>
+      <ul>
+        <li>订餐</li>
+        <li>查看订单信息</li>
+        <li>订单结束前提醒</li>
+      </ul>
+      </p>
+    ]]></description>
+
+    <!--suppress PluginXmlValidity -->
+    <change-notes><![CDATA[
+      <ul>
+        <li>订单结束前提醒</li>
+        <li>下单信息提醒</li>
+      </ul>
+      <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
+    ]]></change-notes>
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.motui.meican.setting.SettingService"/>
-        <applicationConfigurable implementation="cn.motui.meican.setting.SettingEntity"/>
+        <applicationConfigurable instance="cn.motui.meican.setting.SettingEntity"/>
         <toolWindow id="Mei Can" anchor="right" secondary="true"
                     factoryClass="cn.motui.meican.order.OrderToolWindowFactory"/>
+        <postStartupActivity implementation="cn.motui.meican.notification.NotificationStartupActivity"/>
     </extensions>
 
     <applicationListeners>

@@ -1,6 +1,5 @@
-package cn.motui.meican.model;
+package cn.motui.meican.service;
 
-import cn.motui.meican.Constants;
 import cn.motui.meican.MeiCanClient;
 import cn.motui.meican.model.api.Account;
 import cn.motui.meican.model.api.Address;
@@ -23,39 +22,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * 数据服务
+ *
  * @author it.motui
- * @date 2021-01-23
+ * @date 2021-01-30
  */
-public class DataBuilder {
+public class DataServiceImpl implements DataService {
 
-  /**
-   * 时间数据
-   *
-   * @param targetDateTime 目标时间
-   * @return DateData
-   */
-  public static List<DateData> getDateData(LocalDateTime targetDateTime) {
-    String time = targetDateTime.format(Constants.FORMATTER_RECORD_MEI_CAN);
-    CalendarVO calendar = MeiCanClient.instance().calendar(time, time);
+  @Override
+  public List<DateData> getDateData(LocalDateTime targetDateTime) {
+    CalendarVO calendar = MeiCanClient.instance().calendar(targetDateTime, targetDateTime);
     List<DateData> dateDataList = Lists.newArrayList();
     if (CollectionUtils.isNotEmpty(calendar.getDateList())) {
       List<CalendarVO.CalendarItem> calendarItemList = calendar.getDateList().get(0).getCalendarItemList();
       if (CollectionUtils.isNotEmpty(calendarItemList)) {
-        dateDataList = calendarItemList.stream().map(CalendarVO.CalendarItem::toDateData).collect(Collectors.toList());
+        dateDataList = calendarItemList.stream()
+            .map(CalendarVO.CalendarItem::toDateData)
+            .collect(Collectors.toList());
       }
     }
     return dateDataList;
   }
 
-  /**
-   * 餐厅数据
-   *
-   * @param userTabUniqueId 时间TabId
-   * @param targetDateTime  目标时间
-   * @return RestaurantData
-   */
-  public static List<RestaurantData> getRestaurantData(String userTabUniqueId, LocalDateTime targetDateTime) {
-    // 餐厅数据
+  @Override
+  public List<RestaurantData> getRestaurantData(String userTabUniqueId, LocalDateTime targetDateTime) {
     RestaurantVO restaurants = MeiCanClient.instance().restaurants(userTabUniqueId, targetDateTime);
     return restaurants.getRestaurantList().stream()
         .map(restaurant -> {
@@ -72,13 +62,8 @@ public class DataBuilder {
         }).collect(Collectors.toList());
   }
 
-  /**
-   * 地址
-   *
-   * @param corpNamespace corpNamespace
-   * @return Address
-   */
-  public static List<Address> getAddress(String corpNamespace) {
+  @Override
+  public List<Address> getAddress(String corpNamespace) {
     CorpAddressVO corpAddress = MeiCanClient.instance().address(corpNamespace);
     List<Address> addressList = Lists.newArrayList();
     if (CollectionUtils.isNotEmpty(corpAddress.getData().getAddressList())) {
@@ -87,11 +72,13 @@ public class DataBuilder {
     return addressList;
   }
 
-  public static Account getAccount() {
+  @Override
+  public Account getAccount() {
     return MeiCanClient.instance().account();
   }
 
-  public static OrderDetail getOrderDetail(String orderUniqueId) {
+  @Override
+  public OrderDetail getOrderDetail(String orderUniqueId) {
     OrderDetailVO orderDetailVO = MeiCanClient.instance().orderDetail(orderUniqueId);
     CalendarRestaurantVO calendarRestaurantVO = orderDetailVO.getCalendarRestaurants().get(0);
     CalendarRestaurantVO.DishItem dishItem = calendarRestaurantVO.getDishItemList().get(0);
@@ -105,5 +92,10 @@ public class DataBuilder {
         dishItem.getDish().toDish(),
         dishItem.getCount()
     );
+  }
+
+  @Override
+  public String order(String userTabUniqueId, String addressUniqueId, LocalDateTime targetDateTime, Long dishId) {
+    return MeiCanClient.instance().order(userTabUniqueId, addressUniqueId, targetDateTime, dishId);
   }
 }

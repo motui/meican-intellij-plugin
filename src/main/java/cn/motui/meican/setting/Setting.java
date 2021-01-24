@@ -1,5 +1,7 @@
 package cn.motui.meican.setting;
 
+import cn.motui.meican.enums.CycleEnum;
+import cn.motui.meican.enums.TimeEnum;
 import com.intellij.credentialStore.CredentialAttributes;
 import com.intellij.credentialStore.CredentialAttributesKt;
 import com.intellij.credentialStore.Credentials;
@@ -15,9 +17,14 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class Setting {
   private String username = "";
-  private Integer cycle = 2;
-  private Integer tipsHour = 13;
-  private Integer tipsMinute = 0;
+  private Boolean amNotice = false;
+  private Boolean pmNotice = false;
+  /**
+   * 关闭之前多久通知 {@link TimeEnum}
+   */
+  private String notifyBeforeClosing = TimeEnum.M30.name();
+  private String cycle = CycleEnum.MONDAY_TO_FRIDAY.name();
+  private Boolean verification = false;
 
   @Transient
   public boolean isRequest() {
@@ -47,28 +54,48 @@ public class Setting {
     PasswordSafe.getInstance().set(credentialAttributes, credentials);
   }
 
-  public Integer getCycle() {
-    return cycle;
+  public Boolean getAmNotice() {
+    return amNotice;
   }
 
-  public void setCycle(Integer cycle) {
-    this.cycle = cycle;
+  public void setAmNotice(Boolean amNotice) {
+    this.amNotice = amNotice;
   }
 
-  public Integer getTipsHour() {
-    return tipsHour;
+  public Boolean getPmNotice() {
+    return pmNotice;
   }
 
-  public void setTipsHour(Integer tipsHour) {
-    this.tipsHour = tipsHour;
+  public void setPmNotice(Boolean pmNotice) {
+    this.pmNotice = pmNotice;
   }
 
-  public Integer getTipsMinute() {
-    return tipsMinute;
+  public TimeEnum getNotifyBeforeClosing() {
+    return TimeEnum.valueOf(this.notifyBeforeClosing);
   }
 
-  public void setTipsMinute(Integer tipsMinute) {
-    this.tipsMinute = tipsMinute;
+  public void setNotifyBeforeClosing(TimeEnum noticeTimeCloseBefore) {
+    this.notifyBeforeClosing = noticeTimeCloseBefore.name();
+  }
+
+  public void setNotifyBeforeClosing(String notifyBeforeClosing) {
+    this.notifyBeforeClosing = notifyBeforeClosing;
+  }
+
+  public CycleEnum getCycle() {
+    return CycleEnum.valueOf(cycle);
+  }
+
+  public void setCycle(CycleEnum cycle) {
+    this.cycle = cycle.name();
+  }
+
+  public Boolean getVerification() {
+    return verification;
+  }
+
+  public void setVerification(Boolean verification) {
+    this.verification = verification;
   }
 
   private CredentialAttributes createCredentialAttributes(String key) {

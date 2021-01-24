@@ -1,6 +1,6 @@
 package cn.motui.meican.model.ui;
 
-import cn.motui.meican.model.StatusEnum;
+import cn.motui.meican.enums.StatusEnum;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

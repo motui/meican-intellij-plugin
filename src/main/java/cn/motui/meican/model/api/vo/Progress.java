@@ -8,6 +8,14 @@ public class Progress {
   private Long timestamp;
   private String activity;
 
+  public Progress() {
+  }
+
+  public Progress(Long timestamp, String activity) {
+    this.timestamp = timestamp;
+    this.activity = activity;
+  }
+
   public Long getTimestamp() {
     return timestamp;
   }

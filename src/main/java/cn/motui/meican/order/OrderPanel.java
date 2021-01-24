@@ -1,12 +1,14 @@
 package cn.motui.meican.order;
 
 import cn.motui.meican.Constants;
-import cn.motui.meican.model.DataBuilder;
 import cn.motui.meican.model.ui.DateData;
+import cn.motui.meican.notification.NotificationFactory;
+import cn.motui.meican.service.ServiceFactory;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,23 +24,24 @@ public class OrderPanel {
   private JLabel label;
 
   private LocalDateTime targetDateTime = LocalDateTime.now();
+  private int currentSelectedIndex = 0;
 
   public OrderPanel() {
     this.label.setText(targetDateTime.format(Constants.FORMATTER_RECORD));
     this.preButton.addActionListener(this::preButtonAction);
     this.nextButton.addActionListener(this::nextButtonAction);
-    this.tabbedPane.setBackground(Constants.TRANSPARENT);
     this.renderUi();
   }
 
   public void refreshUi() {
+    this.currentSelectedIndex = this.tabbedPane.getSelectedIndex();
     this.renderUi();
   }
 
   private void renderUi() {
     SwingUtilities.invokeLater(() -> {
       this.tabbedPane.removeAll();
-      List<DateData> dateDataList = DataBuilder.getDateData(targetDateTime);
+      List<DateData> dateDataList = ServiceFactory.dataService().getDateData(targetDateTime);
       if (CollectionUtils.isNotEmpty(dateDataList)) {
         dateDataList.forEach(dateData -> {
           JPanel content = null;
@@ -58,23 +61,37 @@ public class OrderPanel {
           this.tabbedPane.addTab(dateData.getTitle(), content);
         });
       }
+      this.tabbedPane.setSelectedIndex(this.currentSelectedIndex);
     });
   }
 
   private void preButtonAction(ActionEvent event) {
     SwingUtilities.invokeLater(() -> {
       this.targetDateTime = this.targetDateTime.plusDays(-1);
-      this.label.setText(this.targetDateTime.format(Constants.FORMATTER_RECORD));
-      this.renderUi();
+      if (this.checkTargetDateTime()) {
+        this.label.setText(this.targetDateTime.format(Constants.FORMATTER_RECORD));
+        this.renderUi();
+      }
     });
   }
 
   private void nextButtonAction(ActionEvent event) {
     SwingUtilities.invokeLater(() -> {
       this.targetDateTime = this.targetDateTime.plusDays(1);
-      this.label.setText(this.targetDateTime.format(Constants.FORMATTER_RECORD));
-      this.renderUi();
+      if (this.checkTargetDateTime()) {
+        this.label.setText(this.targetDateTime.format(Constants.FORMATTER_RECORD));
+        this.renderUi();
+      }
     });
+  }
+
+  private boolean checkTargetDateTime() {
+    long days = Duration.between(this.targetDateTime, LocalDateTime.now()).toDays();
+    boolean result = Math.abs(days) > 6;
+    if (result) {
+      NotificationFactory.showErrorNotification("时间不能超出两周");
+    }
+    return !result;
   }
 
   public JPanel getRoot() {

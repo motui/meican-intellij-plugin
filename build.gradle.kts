@@ -43,7 +43,9 @@ repositories {
 }
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
-//    compileOnly("org.projectlombok:lombok:1.18.16")
+    implementation("org.quartz-scheduler:quartz:2.3.2") {
+        exclude("org.slf4j", "slf4j-api")
+    }
 }
 
 // Configure gradle-intellij-plugin plugin.

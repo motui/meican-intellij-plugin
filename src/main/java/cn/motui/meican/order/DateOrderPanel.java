@@ -1,17 +1,18 @@
 package cn.motui.meican.order;
 
 import cn.motui.meican.Constants;
-import cn.motui.meican.MeiCanClient;
 import cn.motui.meican.exception.MeiCanAddOrderException;
-import cn.motui.meican.model.DataBuilder;
 import cn.motui.meican.model.api.Address;
 import cn.motui.meican.model.api.Dish;
 import cn.motui.meican.model.ui.RestaurantData;
+import cn.motui.meican.notification.NotificationFactory;
+import cn.motui.meican.service.ServiceFactory;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,27 +68,30 @@ public class DateOrderPanel {
       return;
     }
     this.okButton.setEnabled(false);
-    // 订单确认信息
     String message = "店铺: " + restaurantData.getName() +
         "\n菜品: " + dish.getName() +
         "\n地址: " + address.getFinalValue().getPickUpLocation();
-    System.out.println(message);
     int operate = JOptionPane.showConfirmDialog(null, message, "订单确认",
         JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
     if (JOptionPane.YES_OPTION == operate) {
       SwingUtilities.invokeLater(() -> {
         try {
-          MeiCanClient.instance().order(userTabUniqueId, address.getFinalValue().getUniqueId(),
+          ServiceFactory.dataService().order(userTabUniqueId, address.getFinalValue().getUniqueId(),
               targetDateTime, dish.getId());
+          NotificationFactory.showInfoNotification(
+              "<p>下单成功:</p>"
+                  + "<p>店铺:" + restaurantData.getName() + "</p>"
+                  + "<p>菜品:" + dish.getName() + "</p>"
+                  + "<p>地址:" + address.getFinalValue().getPickUpLocation() + "</p>"
+                  + "<p>时间:" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + "</p>"
+          );
           orderPanel.refreshUi();
         } catch (MeiCanAddOrderException e) {
           this.okButton.setEnabled(true);
-          JOptionPane.showMessageDialog(null, e.getMessage(), "下单提示",
-              JOptionPane.ERROR_MESSAGE, null);
+          NotificationFactory.showErrorNotification("[美餐][下单异常]:" + e.getMessage());
         } catch (Exception e) {
           this.okButton.setEnabled(true);
-          JOptionPane.showMessageDialog(null, "请求异常，请稍后再试", "下单提示",
-              JOptionPane.ERROR_MESSAGE, null);
+          NotificationFactory.showErrorNotification("[美餐][下单失败]请求异常,请稍后再试");
         }
       });
     } else {
@@ -97,13 +101,12 @@ public class DateOrderPanel {
 
   private void renderRestaurantUi() {
     SwingUtilities.invokeLater(() -> {
-      List<RestaurantData> restaurantDataList = DataBuilder.getRestaurantData(this.userTabUniqueId, targetDateTime);
+      List<RestaurantData> restaurantDataList = ServiceFactory.dataService()
+          .getRestaurantData(this.userTabUniqueId, targetDateTime);
       RestaurantData[] restaurantDataArray = new RestaurantData[restaurantDataList.size()];
       restaurantDataList.toArray(restaurantDataArray);
       restaurantList.setListData(restaurantDataArray);
-      // 默认值
       restaurantList.setSelectedIndex(0);
-      // 渲染菜单
       this.renderDishUi(restaurantDataList.get(0));
       restaurantList.addListSelectionListener(event -> {
         if (!event.getValueIsAdjusting()) {
@@ -122,10 +125,9 @@ public class DateOrderPanel {
 
   private void renderAddressUi() {
     SwingUtilities.invokeLater(() -> {
-      List<Address> addressList = DataBuilder.getAddress(this.corpNamespace);
+      List<Address> addressList = ServiceFactory.dataService().getAddress(this.corpNamespace);
       if (CollectionUtils.isNotEmpty(addressList)) {
         addressList.forEach(address -> addressComboBox.addItem(address));
-        // 默认第一个
         addressComboBox.setSelectedIndex(0);
       }
     });

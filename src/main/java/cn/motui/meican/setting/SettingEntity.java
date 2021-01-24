@@ -1,6 +1,9 @@
 package cn.motui.meican.setting;
 
 import cn.motui.meican.MeiCanClient;
+import cn.motui.meican.enums.TimeEnum;
+import cn.motui.meican.job.NotificationScheduler;
+import cn.motui.meican.model.api.Account;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
@@ -27,12 +30,12 @@ public class SettingEntity implements Configurable {
 
   @Override
   public @Nls(capitalization = Nls.Capitalization.Title) String getDisplayName() {
-    return "美餐";
+    return "Mei Can";
   }
 
   @Override
   public @Nullable String getHelpTopic() {
-    return "美餐配置";
+    return null;
   }
 
   @Override
@@ -48,7 +51,12 @@ public class SettingEntity implements Configurable {
       return false;
     }
     return !setting.getUsername().equals(form.getUsername())
-        || !setting.getPassword().equals(form.getPassword());
+        || !setting.getPassword().equals(form.getPassword())
+        || !setting.getAmNotice().equals(form.getAmNotice())
+        || !setting.getPmNotice().equals(form.getPmNotice())
+        || !setting.getCycle().equals(form.getCycle())
+        || !setting.getNotifyBeforeClosing().equals(form.getNotifyBeforeClosing())
+        ;
   }
 
   @Override
@@ -56,16 +64,40 @@ public class SettingEntity implements Configurable {
     if (Objects.isNull(form)) {
       return;
     }
+    boolean notifyBeforeClosing = !setting.getNotifyBeforeClosing().equals(form.getNotifyBeforeClosing());
+    boolean am = (!setting.getAmNotice().equals(form.getAmNotice()) || notifyBeforeClosing) && form.getAmNotice();
+    boolean pm = (!setting.getPmNotice().equals(form.getPmNotice()) || notifyBeforeClosing) && form.getPmNotice();
     setting.setUsername(form.getUsername());
     setting.setPassword(form.getPassword());
-    //刷新MeiCanClient中的用户名密码
-    MeiCanClient.instance().refresh(setting.getUsername(), setting.getPassword());
+    setting.setAmNotice(form.getAmNotice());
+    setting.setPmNotice(form.getPmNotice());
+    setting.setCycle(form.getCycle());
+    setting.setNotifyBeforeClosing(form.getNotifyBeforeClosing());
+    if (am) {
+      NotificationScheduler.amScheduler(setting.getCycle(), setting.getNotifyBeforeClosing());
+    }
+    if (pm) {
+      NotificationScheduler.pmScheduler(setting.getCycle(), setting.getNotifyBeforeClosing());
+    }
+    try {
+      //刷新MeiCanClient中的用户名密码
+      MeiCanClient.instance().refresh(setting.getUsername(), setting.getPassword());
+      Account account = MeiCanClient.instance().account();
+      if (Objects.nonNull(account)) {
+        setting.setVerification(true);
+      }
+    } catch (Exception ignore) {
+    }
   }
 
   @Override
   public void reset() {
     form.setUsername(setting.getUsername());
     form.setPassword(setting.getPassword());
+    form.setAmNotice(setting.getAmNotice());
+    form.setPmNotice(setting.getPmNotice());
+    form.setCycle(setting.getCycle());
+    form.setNotifyBeforeClosing(setting.getNotifyBeforeClosing());
   }
 
   @Override

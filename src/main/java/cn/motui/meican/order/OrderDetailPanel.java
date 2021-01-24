@@ -1,9 +1,9 @@
 package cn.motui.meican.order;
 
 import cn.motui.meican.Constants;
-import cn.motui.meican.model.DataBuilder;
 import cn.motui.meican.model.api.vo.Progress;
 import cn.motui.meican.model.ui.OrderDetail;
+import cn.motui.meican.service.ServiceFactory;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -39,7 +39,7 @@ public class OrderDetailPanel {
   private void renderUi() {
     this.scheduleList.setBackground(null);
     SwingUtilities.invokeLater(() -> {
-      OrderDetail orderDetail = DataBuilder.getOrderDetail(this.orderUniqueId);
+      OrderDetail orderDetail = ServiceFactory.dataService().getOrderDetail(this.orderUniqueId);
       this.count.setText(orderDetail.getDishCount() + "份  ");
       this.title.setText(orderDetail.getDish().getTitle());
       this.remark.setText(orderDetail.getDish().getRemark());
