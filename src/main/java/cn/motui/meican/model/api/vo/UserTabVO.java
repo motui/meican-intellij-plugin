@@ -5,7 +5,7 @@ import cn.motui.meican.model.api.Corp;
 
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

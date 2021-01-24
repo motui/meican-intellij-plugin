@@ -6,7 +6,7 @@ import cn.motui.meican.model.api.Postbox;
 import java.util.List;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class OrderDetailVO {

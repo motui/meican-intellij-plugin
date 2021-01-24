@@ -1,14 +1,12 @@
 package cn.motui.meican.order;
 
+import cn.motui.meican.Constants;
 import cn.motui.meican.MeiCanClient;
 import cn.motui.meican.exception.MeiCanAddOrderException;
 import cn.motui.meican.model.DataBuilder;
 import cn.motui.meican.model.api.Address;
 import cn.motui.meican.model.api.Dish;
 import cn.motui.meican.model.ui.RestaurantData;
-import cn.motui.meican.setting.Setting;
-import cn.motui.meican.setting.SettingService;
-import com.intellij.openapi.components.ServiceManager;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.swing.*;
@@ -20,7 +18,7 @@ import java.util.Objects;
 /**
  * 时间对应菜品选择面板
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 public class DateOrderPanel {
@@ -34,16 +32,17 @@ public class DateOrderPanel {
   private final LocalDateTime targetDateTime;
   private final String userTabUniqueId;
   private final String corpNamespace;
-  private final OrderPanel orderWindow;
+  private final OrderPanel orderPanel;
 
-  public DateOrderPanel(OrderPanel orderWindow, LocalDateTime targetDateTime,
+  public DateOrderPanel(OrderPanel orderPanel, LocalDateTime targetDateTime,
                         String userTabUniqueId, String corpNamespace) {
-    this.orderWindow = orderWindow;
+    this.orderPanel = orderPanel;
     this.targetDateTime = targetDateTime;
     this.userTabUniqueId = userTabUniqueId;
     this.corpNamespace = corpNamespace;
 
     // splitPane 设置
+    this.splitPane.setBackground(Constants.TRANSPARENT);
     this.splitPane.setDividerSize(2);
     this.splitPane.setDividerLocation(200);
     this.okButton.addActionListener(this::okListener);
@@ -76,12 +75,11 @@ public class DateOrderPanel {
     int operate = JOptionPane.showConfirmDialog(null, message, "订单确认",
         JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
     if (JOptionPane.YES_OPTION == operate) {
-      System.out.println("点击了确认");
       SwingUtilities.invokeLater(() -> {
         try {
           MeiCanClient.instance().order(userTabUniqueId, address.getFinalValue().getUniqueId(),
               targetDateTime, dish.getId());
-          orderWindow.refreshUi();
+          orderPanel.refreshUi();
         } catch (MeiCanAddOrderException e) {
           this.okButton.setEnabled(true);
           JOptionPane.showMessageDialog(null, e.getMessage(), "下单提示",

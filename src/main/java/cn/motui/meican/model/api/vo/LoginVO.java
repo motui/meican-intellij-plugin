@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class LoginVO {

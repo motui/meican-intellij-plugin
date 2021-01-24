@@ -45,7 +45,7 @@ import java.util.Objects;
 /**
  * 美餐客户端
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class MeiCanClient {

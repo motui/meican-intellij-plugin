@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * 用户信息
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class Account {

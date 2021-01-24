@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 设置持久化
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 @State(name = "美餐", storages = {@Storage(value = "meican.xml")})

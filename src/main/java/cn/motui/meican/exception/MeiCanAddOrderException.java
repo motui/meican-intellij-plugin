@@ -1,7 +1,7 @@
 package cn.motui.meican.exception;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class MeiCanAddOrderException extends RuntimeException {

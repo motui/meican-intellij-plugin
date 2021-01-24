@@ -1,11 +1,14 @@
 package cn.motui.meican;
 
+import com.intellij.ui.JBColor;
+
+import java.awt.*;
 import java.time.format.DateTimeFormatter;
 
 /**
  * 常量池
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class Constants {
@@ -27,4 +30,6 @@ public class Constants {
   public static final String URL_ADD_ORDER = MEI_CAN_BASE_URL + "/preorder/api/v2.1/orders/add";
   public static final String URL_ORDER_SHOW = MEI_CAN_BASE_URL + "/preorder/api/v2.1/orders/show";
   public static final String URL_ADDRESS = MEI_CAN_BASE_URL + "/preorder/api/v2.1/corpaddresses/getmulticorpaddress";
+
+  public static final JBColor TRANSPARENT = new JBColor(new Color(0, 0, 0, 0), new Color(0, 0, 0, 0));
 }

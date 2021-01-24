@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 

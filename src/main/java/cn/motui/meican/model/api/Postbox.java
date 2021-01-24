@@ -1,7 +1,7 @@
 package cn.motui.meican.model.api;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class Postbox {

@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 /**
  * 菜品
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 public class Dish {

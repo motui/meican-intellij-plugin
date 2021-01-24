@@ -13,7 +13,7 @@ import java.util.Objects;
 /**
  * 设置配置
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class SettingEntity implements Configurable {

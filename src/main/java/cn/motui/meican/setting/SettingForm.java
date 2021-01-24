@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class SettingForm {

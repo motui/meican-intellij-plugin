@@ -1,7 +1,7 @@
 package cn.motui.meican.model.api.vo;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-18
  */
 public class AddOrderVO {

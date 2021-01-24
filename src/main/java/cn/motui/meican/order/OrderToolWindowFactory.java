@@ -7,7 +7,7 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class OrderToolWindowFactory implements ToolWindowFactory, DumbAware {

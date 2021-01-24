@@ -1,11 +1,13 @@
 package cn.motui.meican.order;
 
+import cn.motui.meican.Constants;
+
 import javax.swing.*;
 
 /**
  * 空面板
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class EmptyPanel {
@@ -13,7 +15,7 @@ public class EmptyPanel {
   private JTextArea textArea;
 
   public EmptyPanel(String content) {
-    this.textArea.setBackground(null);
+    this.textArea.setBackground(Constants.TRANSPARENT);
     this.textArea.setText(content);
   }
 

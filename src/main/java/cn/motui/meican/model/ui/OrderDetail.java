@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 订单详情
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class OrderDetail {

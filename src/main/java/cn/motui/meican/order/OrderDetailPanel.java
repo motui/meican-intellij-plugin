@@ -1,5 +1,6 @@
 package cn.motui.meican.order;
 
+import cn.motui.meican.Constants;
 import cn.motui.meican.model.DataBuilder;
 import cn.motui.meican.model.api.vo.Progress;
 import cn.motui.meican.model.ui.OrderDetail;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  * 订单详情
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class OrderDetailPanel {
@@ -31,6 +32,7 @@ public class OrderDetailPanel {
   public OrderDetailPanel(LocalDateTime targetDateTime, String orderUniqueId) {
     this.targetDateTime = targetDateTime;
     this.orderUniqueId = orderUniqueId;
+    this.scheduleList.setBackground(Constants.TRANSPARENT);
     this.renderUi();
   }
 

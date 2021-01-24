@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class JsonUtil {

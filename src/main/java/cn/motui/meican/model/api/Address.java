@@ -3,7 +3,7 @@ package cn.motui.meican.model.api;
 /**
  * 下单地址信息
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class Address {

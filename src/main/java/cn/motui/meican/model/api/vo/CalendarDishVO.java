@@ -4,7 +4,7 @@ import cn.motui.meican.model.api.Dish;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 public class CalendarDishVO {

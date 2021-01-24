@@ -1,12 +1,12 @@
 package cn.motui.meican.model;
 
-import cn.motui.meican.model.api.vo.CalendarVO;
 import cn.motui.meican.Constants;
 import cn.motui.meican.MeiCanClient;
 import cn.motui.meican.model.api.Account;
 import cn.motui.meican.model.api.Address;
 import cn.motui.meican.model.api.Dish;
 import cn.motui.meican.model.api.vo.CalendarRestaurantVO;
+import cn.motui.meican.model.api.vo.CalendarVO;
 import cn.motui.meican.model.api.vo.CorpAddressVO;
 import cn.motui.meican.model.api.vo.OrderDetailVO;
 import cn.motui.meican.model.api.vo.RestaurantDishVO;
@@ -14,31 +14,19 @@ import cn.motui.meican.model.api.vo.RestaurantVO;
 import cn.motui.meican.model.ui.DateData;
 import cn.motui.meican.model.ui.OrderDetail;
 import cn.motui.meican.model.ui.RestaurantData;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
-import org.fest.util.Lists;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class DataBuilder {
-  private static final Cache<String, List<DateData>> CACHE;
-
-  static {
-    CACHE = CacheBuilder.newBuilder()
-        // 默认1小时过期
-        .expireAfterWrite(1, TimeUnit.HOURS)
-        .maximumSize(20)
-        .build();
-  }
 
   /**
    * 时间数据
@@ -117,10 +105,5 @@ public class DataBuilder {
         dishItem.getDish().toDish(),
         dishItem.getCount()
     );
-  }
-
-  public void removeCache(LocalDateTime targetDateTime) {
-    String formatTime = targetDateTime.format(Constants.FORMATTER_RECORD_MEI_CAN);
-    CACHE.asMap().remove(formatTime);
   }
 }

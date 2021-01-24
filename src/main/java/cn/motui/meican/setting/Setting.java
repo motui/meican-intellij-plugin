@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 设置项
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-16
  */
 public class Setting {

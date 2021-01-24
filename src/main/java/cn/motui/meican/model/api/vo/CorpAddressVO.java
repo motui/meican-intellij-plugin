@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 地址VO
  *
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
 public class CorpAddressVO {

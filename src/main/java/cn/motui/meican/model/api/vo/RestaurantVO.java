@@ -6,7 +6,7 @@ import cn.motui.meican.model.api.Restaurant;
 import java.util.List;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-17
  */
 

@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @author motui
+ * @author it.motui
  * @date 2021-01-23
  */
-public class OrderPanel extends JPanel {
+public class OrderPanel {
   private JPanel rootPanel;
   private JTabbedPane tabbedPane;
   private JButton preButton;
@@ -27,6 +27,7 @@ public class OrderPanel extends JPanel {
     this.label.setText(targetDateTime.format(Constants.FORMATTER_RECORD));
     this.preButton.addActionListener(this::preButtonAction);
     this.nextButton.addActionListener(this::nextButtonAction);
+    this.tabbedPane.setBackground(Constants.TRANSPARENT);
     this.renderUi();
   }
 
