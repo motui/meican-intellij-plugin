@@ -1,7 +1,34 @@
 <idea-plugin>
     <id>com.github.motui.meican</id>
     <name>MeiCan</name>
-    <vendor>MoTui</vendor>
+    <vendor email="it.motuis@gmail.com" url="https://github.com/motui">MoTui</vendor>
+
+    <description><![CDATA[
+      <p><b>MeiCan plugin for IntelliJ based IDEs.</b></p>
+      <br/>
+      <p>
+      <b>
+      <a href="https://github.com/motui/meican-intellij-plugin">GitHub</a> |
+      <a href="https://github.com/motui/meican-intellij-plugin/issues">Issues</a> |
+      </b>
+      </p>
+      <br/>
+      <p><b>Features:</b>
+      <ul>
+        <li>订餐</li>
+        <li>订单信息</li>
+      </ul>
+      </p>
+    ]]></description>
+
+    <!--suppress PluginXmlValidity -->
+    <change-notes><![CDATA[
+      <ul>
+        <li>订餐</li>
+        <li>查看订单信息</li>
+      </ul>
+      <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
+    ]]></change-notes>
 
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
