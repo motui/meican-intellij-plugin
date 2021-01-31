@@ -9,7 +9,7 @@
       <p>
       <b>
       <a href="https://github.com/motui/meican-intellij-plugin">GitHub</a> |
-      <a href="https://github.com/motui/meican-intellij-plugin/issues">Issues</a> |
+      <a href="https://github.com/motui/meican-intellij-plugin/issues">Issues</a>
       </b>
       </p>
       <br/>
@@ -21,6 +21,7 @@
       </ul>
       </p>
     ]]></description>
+
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>

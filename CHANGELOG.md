@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-## [0.0.2]
+## [0.1.3]
 ### Added
 
 - 通知配置
@@ -16,7 +16,7 @@
 - 开启午餐通知，在10:00 - 提前M分钟时提醒
 - 开启晚餐通知，在15:00 - 提前M分钟时提醒
 
-## [0.0.1]
+## [0.0.1](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.0.1)
 
 ### Added
 

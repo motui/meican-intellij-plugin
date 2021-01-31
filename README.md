@@ -6,7 +6,6 @@
 
 ## 插件介绍
 <!-- Plugin description -->
-Mei Can plugin for IntelliJ based IDEs.
 <!-- Plugin description end -->
 插件提供在intellij中查看美餐订餐信息和订餐，目前可能尚不满足大部分情况。根据作者的使用情况进行编写，后续会逐步完善更多功能
 
