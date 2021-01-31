@@ -18,7 +18,24 @@
 ### Fixed
 - 修复Cron表达式
 
-## [0.1.3]
+## [0.2.0](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2)
+使用Kotlin重构核心代码
+### Added
+- 国际化配置
+
+### Changed
+- 代码模块拆分、逻辑优化
+- 统一提示风格
+
+
+## [0.1.4](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.1.4)
+
+### Fixed
+
+- 修复Cron表达式
+
+## [0.1.3](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.1.3)
+
 ### Added
 
 - 通知配置

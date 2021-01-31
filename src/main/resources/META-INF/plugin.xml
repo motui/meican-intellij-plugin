@@ -25,8 +25,9 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>Remind before order ends</li>
-        <li>Order information reminder</li>
+        <li>Refactor core code using Kotlin</li>
+        <li>International configuration</li>
+        <li>Optimize some details</li>
       </ul>
       <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
@@ -36,10 +37,12 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="cn.motui.meican.setting.SettingService"/>
-        <applicationConfigurable instance="cn.motui.meican.setting.SettingEntity"/>
+        <applicationService serviceImplementation="cn.motui.meican.Settings"/>
         <toolWindow id="Mei Can" anchor="right" secondary="true"
-                    factoryClass="cn.motui.meican.order.OrderToolWindowFactory"/>
+                    factoryClass="cn.motui.meican.ui.OrderToolWindowFactory"/>
         <postStartupActivity implementation="cn.motui.meican.notification.NotificationStartupActivity"/>
+        <applicationConfigurable instance="cn.motui.meican.ui.settings.OptionsConfigurable"/>
+        <applicationService serviceInterface="cn.motui.meican.service.DataService"
+                            serviceImplementation="cn.motui.meican.service.DataServiceImpl"/>
     </extensions>
 </idea-plugin>

@@ -1,7 +1,6 @@
 package cn.motui.meican.model.api.vo;
 
 import cn.motui.meican.model.api.OpeningTime;
-import cn.motui.meican.model.ui.DateData;
 
 import java.util.List;
 import java.util.Objects;
@@ -75,15 +74,6 @@ public class CalendarVO {
     private String reason;
 
     private CorpOrderUserVO corpOrderUser;
-
-    public DateData toDateData() {
-      String orderUniqueId = null;
-      if (Objects.nonNull(corpOrderUser)) {
-        orderUniqueId = corpOrderUser.getUniqueId();
-      }
-      return new DateData(title, status, reason, targetTime, userTab.getUniqueId(),
-          userTab.getCorp().getUniqueId(), userTab.getCorp().getNamespace(), orderUniqueId);
-    }
 
     public Long getTargetTime() {
       return targetTime;
