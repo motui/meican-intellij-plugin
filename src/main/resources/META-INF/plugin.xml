@@ -1,4 +1,4 @@
-<idea-plugin>
+<idea-plugin url="https://github.com/motui/meican-intellij-plugin">
     <id>com.github.motui.meican</id>
     <name>Mei Can</name>
     <vendor email="it.motuis@gmail.com" url="https://github.com/motui">it.motui</vendor>
@@ -15,21 +15,21 @@
       <br/>
       <p><b>Features:</b>
       <ul>
-        <li>订餐</li>
-        <li>查看订单信息</li>
-        <li>订单结束前提醒</li>
+        <li>Order a meal</li>
+        <li>View order information</li>
+        <li>Remind before order ends</li>
       </ul>
       </p>
     ]]></description>
-
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>订单结束前提醒</li>
-        <li>下单信息提醒</li>
+        <li>Remind before order ends</li>
+        <li>Order information reminder</li>
       </ul>
       <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
     ]]></change-notes>
+
     <!-- Product and plugin compatibility requirements -->
     <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
@@ -41,11 +41,4 @@
                     factoryClass="cn.motui.meican.order.OrderToolWindowFactory"/>
         <postStartupActivity implementation="cn.motui.meican.notification.NotificationStartupActivity"/>
     </extensions>
-
-    <applicationListeners>
-
-    </applicationListeners>
-    <actions>
-
-    </actions>
 </idea-plugin>
