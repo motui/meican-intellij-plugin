@@ -56,7 +56,7 @@ public class NotificationScheduler {
   }
 
   public static void amScheduler(CycleEnum cycle, TimeEnum notifyBeforeClosing) {
-    String amCron = String.format("* %s 9 ", 60 - notifyBeforeClosing.getMinute()) + cycle.getCron();
+    String amCron = String.format("0 %s 9 ", 60 - notifyBeforeClosing.getMinute()) + cycle.getCron();
     try {
       NotificationScheduler.scheduler(NotificationScheduler.AM_JOB_NAME, amCron);
     } catch (SchedulerException e) {
@@ -65,7 +65,7 @@ public class NotificationScheduler {
   }
 
   public static void pmScheduler(CycleEnum cycle, TimeEnum notifyBeforeClosing) {
-    String pmCron = String.format("* %s 14 ", 60 - notifyBeforeClosing.getMinute()) + cycle.getCron();
+    String pmCron = String.format("0 %s 14 ", 60 - notifyBeforeClosing.getMinute()) + cycle.getCron();
     try {
       NotificationScheduler.scheduler(NotificationScheduler.PM_JOB_NAME, pmCron);
     } catch (SchedulerException e) {
