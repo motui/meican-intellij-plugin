@@ -3,6 +3,20 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+##[0.1.4]
+### Fixed
+- 修复Cron表达式
 
 ## [0.1.3]
 ### Added
