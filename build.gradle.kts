@@ -74,6 +74,7 @@ detekt {
         xml.enabled = false
         txt.enabled = false
     }
+    ignoreFailures = false
 }
 
 tasks {
