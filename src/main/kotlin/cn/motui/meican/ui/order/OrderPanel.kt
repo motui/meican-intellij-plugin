@@ -8,7 +8,6 @@ import cn.motui.meican.ui.EmptyForm
 import cn.motui.meican.ui.OrderForm
 import cn.motui.meican.util.Notifications
 import cn.motui.meican.util.dataService
-import java.awt.event.ActionEvent
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
@@ -27,8 +26,8 @@ class OrderPanel {
     private var currentTabSelectedIndex = 0
 
     init {
-        form.preButton.addActionListener { preButtonAction(it) }
-        form.nextButton.addActionListener { nextButtonAction(it) }
+        form.preButton.addActionListener { preButtonAction() }
+        form.nextButton.addActionListener { nextButtonAction() }
         form.label.text = labelText()
         renderUi()
     }
@@ -48,7 +47,7 @@ class OrderPanel {
             val tabDataList: List<TabData> = dataService.getDateData(targetDateTime)
             tabDataList.forEach(
                 Consumer { tabData: TabData ->
-                    var content: JPanel? = null
+                    val content: JPanel?
                     val targetTime = tabData.targetTime
                     content = when (tabData.tabStatus) {
                         TabStatus.ORDER -> tabData.orderUniqueId?.let {
@@ -69,7 +68,7 @@ class OrderPanel {
         }
     }
 
-    private fun preButtonAction(event: ActionEvent) {
+    private fun preButtonAction() {
         SwingUtilities.invokeLater {
             if (checkTargetTime(targetDateTime.plusDays(-1))) {
                 targetDateTime = targetDateTime.plusDays(-1)
@@ -79,7 +78,7 @@ class OrderPanel {
         }
     }
 
-    private fun nextButtonAction(event: ActionEvent) {
+    private fun nextButtonAction() {
         SwingUtilities.invokeLater {
             if (checkTargetTime(targetDateTime.plusDays(1))) {
                 targetDateTime = targetDateTime.plusDays(1)

@@ -9,10 +9,8 @@ import cn.motui.meican.model.ui.RestaurantData
 import cn.motui.meican.ui.DateOrderForm
 import cn.motui.meican.util.Notifications
 import cn.motui.meican.util.dataService
-import java.awt.event.ActionEvent
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.SwingUtilities
@@ -31,7 +29,7 @@ class DateOrderPanel constructor(
     init {
         form.splitPane.dividerSize = 2
         form.splitPane.dividerLocation = 200
-        form.okButton.addActionListener { okListener(it) }
+        form.okButton.addActionListener { okListener() }
         renderUi()
     }
 
@@ -40,24 +38,14 @@ class DateOrderPanel constructor(
         renderAddressUi()
     }
 
-    private fun okListener(event: ActionEvent) {
+    private fun okListener() {
         val restaurant = form.restaurantList.selectedValue
         val dish = form.dishList.selectedValue
         val address = form.addressComboBox.selectedItem as Address
-        if (Objects.isNull(dish)) {
+        if (dish == null) {
             JOptionPane.showMessageDialog(
                 null,
                 message("order.tool.window.date.order.check.dish.message"),
-                message("order.tool.window.date.order.check.title"),
-                JOptionPane.ERROR_MESSAGE,
-                null
-            )
-            return
-        }
-        if (Objects.isNull(address)) {
-            JOptionPane.showMessageDialog(
-                null,
-                message("order.tool.window.date.order.check.address.message"),
                 message("order.tool.window.date.order.check.title"),
                 JOptionPane.ERROR_MESSAGE,
                 null
@@ -112,9 +100,14 @@ class DateOrderPanel constructor(
     }
 
     private fun orderConfirmation(restaurant: RestaurantData, dish: Dish, address: Address): String {
-        return message("order.tool.window.date.order.restaurant") + restaurant.name + ":\n" +
-            message("order.tool.window.date.order.dish") + dish.name + ":\n" +
-            message("order.tool.window.date.order.address") + address.finalValue.pickUpLocation
+        return "%s:%s\n%s:%s\n%s:%s".format(
+            message("order.tool.window.date.order.restaurant"),
+            restaurant.name,
+            message("order.tool.window.date.order.dish"),
+            dish.name,
+            message("order.tool.window.date.order.address"),
+            address.finalValue.pickUpLocation
+        )
     }
 
     private fun renderRestaurantUi() {

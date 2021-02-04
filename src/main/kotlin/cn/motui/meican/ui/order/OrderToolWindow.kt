@@ -23,8 +23,7 @@ class OrderToolWindow constructor(
     fun renderUi() {
         val contentManager = toolWindow.contentManager
         contentManager.removeAllContents(true)
-        var contentPanel: JPanel? = null
-        contentPanel = if (settings.account.isVerified()) {
+        val contentPanel: JPanel = if (settings.account.isVerified()) {
             OrderPanel().root()
         } else {
             EmptyForm(emptyContent()).root

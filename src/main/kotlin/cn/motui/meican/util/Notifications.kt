@@ -4,7 +4,11 @@ package cn.motui.meican.util
 
 import cn.motui.meican.HTML_DESCRIPTION_SETTINGS
 import cn.motui.meican.ui.settings.OptionsConfigurable
-import com.intellij.notification.*
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationDisplayType
+import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationListener
+import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.project.Project
 import javax.swing.event.HyperlinkEvent
