@@ -1,7 +1,7 @@
 /**
  * Constants
  *
- * @author zhihaoguo
+ * @author it.motui
  * @date 2021-01-31
  */
 @file:Suppress("SpellCheckingInspection")

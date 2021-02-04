@@ -43,7 +43,7 @@ class TabPanel constructor(
 
     private fun renderUi() {
         SwingUtilities.invokeLater {
-            val tabDataList: List<TabData> = dataService.getDateData(targetDateTime)
+            val tabDataList: List<TabData> = dataService.getTabData(targetDateTime)
             val tabData = tabDataList.first { tabData -> tabData.type() == tabType }
             when (tabData.tabStatus) {
                 TabStatus.AVAILABLE -> renderOrderUi(tabData)
@@ -66,8 +66,8 @@ class TabPanel constructor(
     private fun renderOrderDetailUi(tabData: TabData) {
         SwingUtilities.invokeLater {
             cancelOrderButton.text = message("tab.button.order.cancel")
-            tabData.orderUniqueId?.let {
-                val orderDetail = dataService.getOrderDetail(it)
+            tabData.corpOrderUser?.let {
+                val orderDetail = dataService.getOrderDetail(it.orderUniqueId)
                 cancelOrderButton.addActionListener { buttonCancelOrderListener(orderDetail) }
                 if (orderDetail.readyToDelete) {
                     cancelOrderButton.isVisible = true

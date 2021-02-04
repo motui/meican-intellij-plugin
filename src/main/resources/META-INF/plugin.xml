@@ -26,8 +26,7 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>Automatic ordering before order end</li>
-        <li>Cancel order</li>
+        <li>Fix API request exception</li>
         <li>Optimize some details</li>
       </ul>
       <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
@@ -40,7 +39,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.motui.meican.Settings"/>
         <applicationService serviceImplementation="cn.motui.meican.ui.order.OrderView"/>
-        <toolWindow id="Mei Can" anchor="right" secondary="true"
+        <toolWindow id="Mei Can" anchor="right" secondary="true" icon="/icon.svg"
                     factoryClass="cn.motui.meican.ui.order.OrderToolWindowFactory"/>
         <postStartupActivity implementation="cn.motui.meican.MeiCanStartupActivity"/>
         <applicationConfigurable instance="cn.motui.meican.ui.settings.OptionsConfigurable"/>

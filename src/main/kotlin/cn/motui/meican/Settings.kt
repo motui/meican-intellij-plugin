@@ -90,7 +90,7 @@ class Notice constructor(
     /**
      * 类型
      */
-    var tab: Tab = Tab.ALL,
+    var tab: Tab = Tab.NO,
 
     /**
      * 周期

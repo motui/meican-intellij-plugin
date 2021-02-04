@@ -22,7 +22,7 @@ class OrderAutomaticJob : Job {
         val jobType = TabType.valueOf(jobTypeStr as String)
         var content: String? = null
         try {
-            val dateData = dataService.getDateData(LocalDateTime.now())
+            val dateData = dataService.getTabData(LocalDateTime.now())
             val tabData: TabData = if (TabType.AM == jobType) dateData[0] else dateData[1]
             if (tabData.tabStatus == TabStatus.AVAILABLE) {
                 content = orderAutomatic(tabData)

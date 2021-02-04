@@ -14,7 +14,7 @@ class TabData(
     val userTabUniqueId: String,
     val corpUniqueId: String,
     val corpNamespace: String,
-    val orderUniqueId: String?,
+    val corpOrderUser: CorpOrderUser?,
     val targetDateTime: LocalDateTime
 ) {
 
@@ -23,5 +23,15 @@ class TabData(
             return TabType.AM
         }
         return TabType.PM
+    }
+
+    class CorpOrderUser constructor(
+        val orderUniqueId: String,
+        var readyToDelete: Boolean,
+        var corpOrderStatus: String,
+    ) {
+        fun isRefresh(): Boolean {
+            return readyToDelete && "ON_THE_WAY" != corpOrderStatus
+        }
     }
 }

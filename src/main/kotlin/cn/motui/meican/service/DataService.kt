@@ -17,7 +17,7 @@ interface DataService {
      * @param targetDateTime 目标时间
      * @return TabData
      */
-    fun getDateData(targetDateTime: LocalDateTime): List<TabData>
+    fun getTabData(targetDateTime: LocalDateTime): List<TabData>
 
     /**
      * 餐厅数据

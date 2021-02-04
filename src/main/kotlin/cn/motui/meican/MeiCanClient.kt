@@ -24,12 +24,14 @@ import org.apache.http.client.methods.HttpPost
 import org.apache.http.client.methods.HttpRequestBase
 import org.apache.http.impl.client.BasicCookieStore
 import org.apache.http.impl.client.HttpClients
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager
 import org.apache.http.message.BasicNameValuePair
 import org.apache.http.util.EntityUtils
 import org.jetbrains.annotations.NotNull
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 /**
  * 美餐客户端
@@ -37,9 +39,16 @@ import java.time.format.DateTimeFormatter
 class MeiCanClient {
     private var username: String? = null
     private var password: String? = null
-    private val httpClient: HttpClient = HttpClients.custom().setDefaultCookieStore(BasicCookieStore()).build()
+    private val connectionManager: PoolingHttpClientConnectionManager =
+        PoolingHttpClientConnectionManager(60000, TimeUnit.MILLISECONDS)
+    private val httpClient: HttpClient
 
     init {
+        connectionManager.maxTotal = 10
+        connectionManager.defaultMaxPerRoute = 5
+        httpClient = HttpClients.custom()
+            .setConnectionManager(connectionManager)
+            .setDefaultCookieStore(BasicCookieStore()).build()
         this.username = settings.account.username
         this.password = settings.account.getPassword()
         login()

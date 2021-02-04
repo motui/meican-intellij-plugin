@@ -50,7 +50,7 @@ class OrderPanel : OrderWindowForm() {
 
     private fun renderTabbedUi() {
         SwingUtilities.invokeLater {
-            val tabDataList: List<TabData> = dataService.getDateData(targetDateTime)
+            val tabDataList: List<TabData> = dataService.getTabData(targetDateTime)
             tabbedPane.removeAll()
             tabDataList.forEach(
                 Consumer { tabData: TabData ->

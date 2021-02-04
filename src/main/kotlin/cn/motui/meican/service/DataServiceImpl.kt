@@ -17,10 +17,17 @@ import java.time.LocalDateTime
  */
 @Service
 class DataServiceImpl : DataService {
-    override fun getDateData(targetDateTime: LocalDateTime): MutableList<TabData> {
+    override fun getTabData(targetDateTime: LocalDateTime): MutableList<TabData> {
         val calendar = meiCanClient.calendar(targetDateTime, targetDateTime)
         val tabDataList: MutableList<TabData> = mutableListOf()
         calendar.dateList?.get(0)?.calendarItemList?.forEach {
+            val corpOrderUser = it.corpOrderUser?.let { corpOrderUser ->
+                TabData.CorpOrderUser(
+                    corpOrderUser.uniqueId,
+                    corpOrderUser.readyToDelete,
+                    corpOrderUser.corpOrderStatus
+                )
+            }
             tabDataList.add(
                 TabData(
                     it.title,
@@ -29,7 +36,7 @@ class DataServiceImpl : DataService {
                     it.userTab.uniqueId,
                     it.userTab.corp.uniqueId,
                     it.userTab.corp.namespace,
-                    it.corpOrderUser?.uniqueId,
+                    corpOrderUser,
                     it.targetTime.toLocalDateTime()
                 )
             )

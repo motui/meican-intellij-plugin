@@ -2,6 +2,8 @@ package cn.motui.meican
 
 import cn.motui.meican.job.NotificationScheduler
 import cn.motui.meican.job.OrderAutomaticScheduler
+import cn.motui.meican.job.RefreshJob
+import cn.motui.meican.job.RefreshScheduler
 import cn.motui.meican.model.TabType
 import cn.motui.meican.util.settings
 import com.intellij.openapi.project.Project
@@ -30,5 +32,6 @@ class MeiCanStartupActivity : StartupActivity {
         if (settings.order.isOrderAutomatic(TabType.PM)) {
             OrderAutomaticScheduler.scheduler(order.cron(TabType.PM), TabType.PM)
         }
+        RefreshScheduler.scheduler(RefreshJob.cron)
     }
 }

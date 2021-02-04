@@ -20,18 +20,18 @@ class NotificationJob : Job {
         val jobType = TabType.valueOf(jobTypeStr as String)
         var content: String? = null
         try {
-            val dateData = dataService.getDateData(LocalDateTime.now())
+            val dateData = dataService.getTabData(LocalDateTime.now())
             val tabData: TabData = if (TabType.AM == jobType) dateData[0] else dateData[1]
             content = when (tabData.tabStatus) {
                 TabStatus.AVAILABLE ->
                     if (TabType.AM == jobType)
                         MeiCanBundle.message("order.notification.am") else MeiCanBundle.message("order.notification.pm")
                 TabStatus.ORDER -> {
-                    if (tabData.orderUniqueId.isNullOrBlank()) {
+                    if (tabData.corpOrderUser == null) {
                         if (TabType.AM == jobType) MeiCanBundle.message("order.notification.am")
                         else MeiCanBundle.message("order.notification.pm")
                     } else {
-                        val orderDetail = dataService.getOrderDetail(tabData.orderUniqueId)
+                        val orderDetail = dataService.getOrderDetail(tabData.corpOrderUser.orderUniqueId)
                         MeiCanBundle.message("order.notification.order.detail").format(
                             orderDetail.restaurantName,
                             orderDetail.dish.name,

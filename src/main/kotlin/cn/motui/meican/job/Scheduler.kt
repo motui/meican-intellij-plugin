@@ -77,7 +77,6 @@ class OrderAutomaticScheduler {
         private const val pmJobName: String = "PM_ORDER_AUTOMATIC_JOB"
 
         fun scheduler(cron: String, jobType: TabType) {
-            println(cron + "\t" + jobType.name)
             val jobName = if (TabType.AM == jobType) amJobName else pmJobName
             val triggerKey = TriggerKey.triggerKey(jobName, triggerGroupName)
             val trigger = schedulerFactory.scheduler.getTrigger(triggerKey)
@@ -87,6 +86,36 @@ class OrderAutomaticScheduler {
             trigger?.let {
                 update(triggerKey, trigger as CronTrigger, cron, jobKey, jobType)
             } ?: create(triggerKey, cron, jobType, jobDetail)
+        }
+    }
+}
+
+/**
+ * 刷新任务
+ */
+class RefreshScheduler {
+    companion object {
+        fun scheduler(cron: String) {
+            val jobName = "REFRESH_JOB"
+            val triggerKey = TriggerKey.triggerKey(jobName, triggerGroupName)
+            val trigger = schedulerFactory.scheduler.getTrigger(triggerKey)
+            if (trigger == null) {
+                val jobDetail = JobBuilder.newJob(RefreshJob::class.java)
+                    .withIdentity(jobName, triggerGroupName)
+                    .build()
+                val scheduler = schedulerFactory.scheduler
+                scheduler.scheduleJob(
+                    jobDetail,
+                    TriggerBuilder
+                        .newTrigger()
+                        .withIdentity(triggerKey)
+                        .withSchedule(CronScheduleBuilder.cronSchedule(cron))
+                        .build()
+                )
+                if (!scheduler.isStarted) {
+                    scheduler.start()
+                }
+            }
         }
     }
 }
