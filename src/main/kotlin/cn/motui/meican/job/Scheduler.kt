@@ -83,7 +83,7 @@ class NotificationJob : Job {
         val jobTypeStr = context?.mergedJobDataMap?.get(NotificationScheduler.jobKey)
         val jobType = NotificationScheduler.JobType.valueOf(jobTypeStr as String)
         try {
-            val dateData = dataService.getDateData(LocalDateTime.now().plusDays(1))
+            val dateData = dataService.getDateData(LocalDateTime.now())
             val tabData: TabData = if (NotificationScheduler.JobType.AM == jobType) dateData[0] else dateData[1]
             val content = when (tabData.tabStatus) {
                 TabStatus.AVAILABLE ->
