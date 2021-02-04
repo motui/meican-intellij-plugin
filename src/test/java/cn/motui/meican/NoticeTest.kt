@@ -4,7 +4,6 @@ import cn.motui.meican.ui.settings.NoticeTime
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-
 class NoticeTest {
     @Test
     fun cron() {

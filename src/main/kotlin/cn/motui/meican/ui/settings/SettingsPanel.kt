@@ -54,12 +54,12 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
     val isModified: Boolean
         get() {
             val settings = settings
-            return settings.account.username != usernameField.text
-                    || settings.account.getPassword() != String(passwordField.password)
-                    || settings.notice.am != noticeAmCheckBox.isSelected
-                    || settings.notice.pm != noticePmCheckBox.isSelected
-                    || settings.notice.beforeClosingTime != timeComboBox.selectedItem
-                    || settings.notice.cycle != cycleComboBox.selectedItem
+            return settings.account.username != usernameField.text ||
+                settings.account.getPassword() != String(passwordField.password) ||
+                settings.notice.am != noticeAmCheckBox.isSelected ||
+                settings.notice.pm != noticePmCheckBox.isSelected ||
+                settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
+                settings.notice.cycle != cycleComboBox.selectedItem
         }
 
     fun apply() {
@@ -103,5 +103,4 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         timeComboBox.selected = settings.notice.beforeClosingTime
         cycleComboBox.selected = settings.notice.cycle
     }
-
 }

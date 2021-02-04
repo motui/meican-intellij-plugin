@@ -1,7 +1,7 @@
 package cn.motui.meican.util
 
 import cn.motui.meican.MeiCanClient
-import cn.motui.meican.Settings;
+import cn.motui.meican.Settings
 import cn.motui.meican.service.DataService
 import com.intellij.notification.Notification
 import com.intellij.notification.Notifications

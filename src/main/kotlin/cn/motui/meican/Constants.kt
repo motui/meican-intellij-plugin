@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
 const val STORAGE_NAME = "itmotui.meican.xml"
 
 const val USER_AGENT =
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
+    "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36"
 
 const val MEI_CAN_BASE_URL = "https://meican.com"
 const val MEI_CAN_CLIENT_ID = "Xqr8w0Uk4ciodqfPwjhav5rdxTaYepD"
@@ -27,13 +27,9 @@ const val MEI_CAN_URL_ADD_ORDER = "$MEI_CAN_BASE_URL/preorder/api/v2.1/orders/ad
 const val MEI_CAN_URL_ORDER_SHOW = "$MEI_CAN_BASE_URL/preorder/api/v2.1/orders/show"
 const val MEI_CAN_URL_ADDRESS = "$MEI_CAN_BASE_URL/preorder/api/v2.1/corpaddresses/getmulticorpaddress"
 
-
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 
 val FORMATTER_RECORD_MEI_CAN: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 val FORMATTER_TIME_MEI_CAN: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd+HH:mm")
 
 const val NOTIFICATIONS_ID: String = "mei can"
-
-
-

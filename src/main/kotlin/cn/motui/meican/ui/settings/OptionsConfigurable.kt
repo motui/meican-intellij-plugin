@@ -19,7 +19,6 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
 
     override fun getDisplayName(): String = message("setting.page.name")
 
-
     override fun createComponent(): JComponent = SettingsPanel(settings).let {
         settingsPanel = it
         it.root
@@ -36,7 +35,6 @@ class OptionsConfigurable : SearchableConfigurable, Disposable {
     override fun apply() {
         settingsPanel?.apply()
     }
-
 
     override fun dispose() {
         settingsPanel = null

@@ -1,6 +1,5 @@
 package cn.motui.meican.model.ui
 
-import cn.motui.meican.model.TabStatus
 import cn.motui.meican.model.api.Dish
 import cn.motui.meican.model.api.Postbox
 import cn.motui.meican.model.api.vo.Progress
@@ -17,7 +16,4 @@ class OrderDetail constructor(
     val restaurantName: String,
     val dish: Dish,
     val dishCount: Int
-) {
-
-
-}
+)

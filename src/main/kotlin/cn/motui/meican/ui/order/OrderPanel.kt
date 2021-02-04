@@ -6,7 +6,6 @@ import cn.motui.meican.model.TabStatus
 import cn.motui.meican.model.ui.TabData
 import cn.motui.meican.ui.EmptyForm
 import cn.motui.meican.ui.OrderForm
-import cn.motui.meican.ui.UI.transparentColor
 import cn.motui.meican.util.Notifications
 import cn.motui.meican.util.dataService
 import java.awt.event.ActionEvent
@@ -47,21 +46,25 @@ class OrderPanel {
         SwingUtilities.invokeLater {
             form.tabbedPane.removeAll()
             val tabDataList: List<TabData> = dataService.getDateData(targetDateTime)
-            tabDataList.forEach(Consumer { tabData: TabData ->
-                var content: JPanel? = null
-                val targetTime = tabData.targetTime
-                content = when (tabData.tabStatus) {
-                    TabStatus.ORDER -> tabData.orderUniqueId?.let {
-                        OrderDetailPanel(it).root()
+            tabDataList.forEach(
+                Consumer { tabData: TabData ->
+                    var content: JPanel? = null
+                    val targetTime = tabData.targetTime
+                    content = when (tabData.tabStatus) {
+                        TabStatus.ORDER -> tabData.orderUniqueId?.let {
+                            OrderDetailPanel(it).root()
+                        }
+                        TabStatus.AVAILABLE -> DateOrderPanel(
+                            this,
+                            targetTime,
+                            tabData.userTabUniqueId,
+                            tabData.corpNamespace
+                        ).root()
+                        else -> EmptyForm(tabData.reason).root
                     }
-                    TabStatus.AVAILABLE -> DateOrderPanel(
-                        this, targetTime, tabData.userTabUniqueId,
-                        tabData.corpNamespace
-                    ).root()
-                    else -> EmptyForm(tabData.reason).root
+                    form.tabbedPane.addTab(tabData.title, content)
                 }
-                form.tabbedPane.addTab(tabData.title, content)
-            })
+            )
             form.tabbedPane.selectedIndex = currentTabSelectedIndex
         }
     }

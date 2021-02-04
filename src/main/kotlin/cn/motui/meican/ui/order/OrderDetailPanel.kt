@@ -2,7 +2,6 @@ package cn.motui.meican.ui.order
 
 import cn.motui.meican.MeiCanBundle.message
 import cn.motui.meican.ui.OrderDetailForm
-import cn.motui.meican.ui.UI
 import cn.motui.meican.util.dataService
 import cn.motui.meican.util.toLocalDateTime
 import java.time.format.DateTimeFormatter
@@ -42,5 +41,4 @@ class OrderDetailPanel constructor(
             )
         }
     }
-
 }

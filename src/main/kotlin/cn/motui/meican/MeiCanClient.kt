@@ -231,7 +231,6 @@ class MeiCanClient {
         }
     }
 
-
     private fun setHeader(httpRequest: HttpRequestBase) {
         httpRequest.addHeader("User-Agent", USER_AGENT)
         httpRequest.addHeader("Content-Type", "application/x-www-form-urlencoded")
@@ -286,6 +285,4 @@ class MeiCanClient {
             MeiCanClient()
         }
     }
-
-
 }

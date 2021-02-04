@@ -30,7 +30,8 @@ object Notifications {
                             HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(project)
                         }
                     }
-                })
+                }
+            )
             .apply { for (action in actions) addAction(action) }
             .show(project)
     }
@@ -58,6 +59,4 @@ object Notifications {
     fun showErrorNotification(displayId: String, title: String, message: String, project: Project? = null) {
         showNotification(displayId, title, message, NotificationType.ERROR, project)
     }
-
-
 }

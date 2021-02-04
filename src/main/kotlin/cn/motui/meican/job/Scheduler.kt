@@ -37,7 +37,7 @@ class NotificationScheduler {
         }
 
         private fun create(triggerKey: TriggerKey, jobName: String, cron: String, jobType: JobType) {
-            val scheduler = schedulerFactory.scheduler;
+            val scheduler = schedulerFactory.scheduler
             val jobDetail = JobBuilder.newJob(NotificationJob::class.java)
                 .withIdentity(jobName, triggerGroupName)
                 .build()
@@ -80,8 +80,9 @@ class NotificationJob : Job {
             val dateData = dataService.getDateData(LocalDateTime.now().plusDays(1))
             val tabData: TabData = if (NotificationScheduler.JobType.AM == jobType) dateData[0] else dateData[1]
             val content = when (tabData.tabStatus) {
-                TabStatus.AVAILABLE -> if (NotificationScheduler.JobType.AM == jobType)
-                    message("order.notification.am") else message("order.notification.pm")
+                TabStatus.AVAILABLE ->
+                    if (NotificationScheduler.JobType.AM == jobType)
+                        message("order.notification.am") else message("order.notification.pm")
                 TabStatus.ORDER -> {
                     if (tabData.orderUniqueId.isNullOrBlank()) {
                         if (NotificationScheduler.JobType.AM == jobType) message("order.notification.am")
@@ -105,4 +106,3 @@ class NotificationJob : Job {
         }
     }
 }
-

@@ -5,7 +5,6 @@ import com.intellij.ide.passwordSafe.PasswordSafe
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-
 /**
  * PasswordSafeDelegate
  */
@@ -13,7 +12,7 @@ class PasswordSafeDelegate private constructor(private val attributes: Credentia
     ReadWriteProperty<Any?, String?> {
 
     constructor(serviceName: String, userName: String? = null) :
-            this(CredentialAttributesFactory.create(serviceName, userName))
+        this(CredentialAttributesFactory.create(serviceName, userName))
 
     private val store = PasswordSafe.instance
 

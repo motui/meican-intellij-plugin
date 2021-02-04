@@ -15,7 +15,4 @@ class TabData(
     val corpNamespace: String,
     val orderUniqueId: String?,
     val targetTime: LocalDateTime
-) {
-
-
-}
+)

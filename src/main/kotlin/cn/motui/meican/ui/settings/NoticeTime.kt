@@ -2,7 +2,6 @@ package cn.motui.meican.ui.settings
 
 import cn.motui.meican.MeiCanBundle.message
 
-
 enum class NoticeTime(
     val time: Int,
     private val displayName: String
