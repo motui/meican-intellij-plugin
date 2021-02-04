@@ -13,7 +13,7 @@ import com.intellij.util.xmlb.annotations.Transient
 /**
  * Settings
  */
-@State(name = "Settings", storages = [(Storage(STORAGE_NAME))])
+@State(name = "MeiCanSettings", storages = [(Storage(STORAGE_NAME))])
 class Settings : PersistentStateComponent<Settings> {
 
     /**

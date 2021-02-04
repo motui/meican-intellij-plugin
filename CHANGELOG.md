@@ -3,20 +3,6 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-##[0.1.4]
-### Fixed
-- 修复Cron表达式
 
 ## [0.2.0](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2)
 使用Kotlin重构核心代码
