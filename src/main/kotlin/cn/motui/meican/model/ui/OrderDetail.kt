@@ -8,6 +8,7 @@ import cn.motui.meican.model.api.vo.Progress
  * 订单详情
  */
 class OrderDetail constructor(
+    val uniqueId: String,
     val corpOrderId: String,
     val pickUpMessage: String,
     val postbox: Postbox,
@@ -15,5 +16,6 @@ class OrderDetail constructor(
     val restaurantUniqueId: String,
     val restaurantName: String,
     val dish: Dish,
-    val dishCount: Int
+    val dishCount: Int,
+    val readyToDelete: Boolean
 )

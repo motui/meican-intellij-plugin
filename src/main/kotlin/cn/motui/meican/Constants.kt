@@ -26,6 +26,7 @@ const val MEI_CAN_URL_RESTAURANTS_SHOW = "$MEI_CAN_BASE_URL/preorder/api/v2.1/re
 const val MEI_CAN_URL_ADD_ORDER = "$MEI_CAN_BASE_URL/preorder/api/v2.1/orders/add"
 const val MEI_CAN_URL_ORDER_SHOW = "$MEI_CAN_BASE_URL/preorder/api/v2.1/orders/show"
 const val MEI_CAN_URL_ADDRESS = "$MEI_CAN_BASE_URL/preorder/api/v2.1/corpaddresses/getmulticorpaddress"
+const val MEI_CAN_URL_DELETE = "$MEI_CAN_BASE_URL/preorder/api/v2.1/orders/delete"
 
 const val HTML_DESCRIPTION_SETTINGS = "#SETTINGS"
 

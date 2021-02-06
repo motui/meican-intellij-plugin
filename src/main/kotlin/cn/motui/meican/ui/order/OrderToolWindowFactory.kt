@@ -1,6 +1,5 @@
-package cn.motui.meican.ui
+package cn.motui.meican.ui.order
 
-import cn.motui.meican.ui.order.OrderToolWindow
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
@@ -11,7 +10,6 @@ import com.intellij.openapi.wm.ToolWindowFactory
  */
 class OrderToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val orderToolWindow = OrderToolWindow(toolWindow)
-        orderToolWindow.renderUi()
+        OrderView.instance.setup(project, toolWindow)
     }
 }

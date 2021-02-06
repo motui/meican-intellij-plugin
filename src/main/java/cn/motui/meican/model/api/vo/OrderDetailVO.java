@@ -16,6 +16,24 @@ public class OrderDetailVO {
   private List<Progress> progressList;
   @JsonProperty("restaurantItemList")
   private List<CalendarRestaurantVO> calendarRestaurants;
+  private Boolean readyToDelete;
+  private String uniqueId;
+
+  public String getUniqueId() {
+    return uniqueId;
+  }
+
+  public void setUniqueId(String uniqueId) {
+    this.uniqueId = uniqueId;
+  }
+
+  public Boolean getReadyToDelete() {
+    return readyToDelete;
+  }
+
+  public void setReadyToDelete(Boolean readyToDelete) {
+    this.readyToDelete = readyToDelete;
+  }
 
   public String getCorpOrderId() {
     return corpOrderId;

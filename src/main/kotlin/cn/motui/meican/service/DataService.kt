@@ -71,4 +71,10 @@ interface DataService {
         targetDateTime: LocalDateTime,
         dishId: Long
     ): String
+
+    /**
+     * 取消订单
+     * @param orderUniqueId 订单ID
+     */
+    fun cancelOrder(orderUniqueId: String)
 }

@@ -22,6 +22,11 @@ inline val meiCanClient: MeiCanClient get() = MeiCanClient.instance
 inline val dataService: DataService get() = ServiceManager.getService(DataService::class.java)
 
 /**
+ * Asserts whether the method is being called from the event dispatch thread.
+ */
+fun assertIsDispatchThread() = application.assertIsDispatchThread()
+
+/**
  * Shows the notification[Notification].
  */
 fun Notification.show(project: Project? = null) {

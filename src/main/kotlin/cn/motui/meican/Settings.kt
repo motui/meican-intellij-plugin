@@ -1,7 +1,11 @@
 package cn.motui.meican
 
-import cn.motui.meican.ui.settings.NoticeCycle
+import cn.motui.meican.model.TabType
+import cn.motui.meican.ui.settings.Automatic
+import cn.motui.meican.ui.settings.Cycle
 import cn.motui.meican.ui.settings.NoticeTime
+import cn.motui.meican.ui.settings.Tab
+import cn.motui.meican.ui.settings.TabShow
 import cn.motui.meican.util.PasswordSafeDelegate
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
@@ -25,6 +29,16 @@ class Settings : PersistentStateComponent<Settings> {
      * 通知选项
      */
     var notice: Notice = Notice()
+
+    /**
+     * 订餐
+     */
+    var order: Order = Order()
+
+    /**
+     * 其他
+     */
+    var other: Other = Other()
 
     override fun getState(): Settings = this
 
@@ -74,19 +88,14 @@ class Account constructor(
  */
 class Notice constructor(
     /**
-     * 午餐
+     * 类型
      */
-    var am: Boolean = false,
-
-    /**
-     * 晚餐
-     */
-    var pm: Boolean = false,
+    var tab: Tab = Tab.ALL,
 
     /**
      * 周期
      */
-    var cycle: NoticeCycle = NoticeCycle.EVERYDAY,
+    var cycle: Cycle = Cycle.MONDAY_TO_FRIDAY,
 
     /**
      * 截止前{time}通知
@@ -97,15 +106,65 @@ class Notice constructor(
     /**
      * Cron表达式
      */
-    fun cron(hour: Int): String {
+    private fun cron(hour: Int): String {
         return beforeClosingTime.cron(hour) + " " + cycle.cron
     }
 
-    fun amCron(): String {
-        return cron(10)
+    fun cron(tabType: TabType): String {
+        return if (TabType.AM == tabType) {
+            cron(10)
+        } else {
+            cron(15)
+        }
     }
 
-    fun pmCron(): String {
-        return cron(15)
+    fun isNotice(tabType: TabType): Boolean {
+        return when (tab) {
+            Tab.NO -> false
+            Tab.ALL -> true
+            Tab.AM -> TabType.AM == tabType
+            else -> TabType.PM == tabType
+        }
+    }
+}
+
+/**
+ * 点餐
+ */
+class Order constructor(
+    var automatic: Automatic = Automatic.NO,
+    var cycle: Cycle = Cycle.MONDAY_TO_FRIDAY,
+) {
+    fun isOrderAutomatic(tabType: TabType): Boolean {
+        return when (automatic) {
+            Automatic.NO -> false
+            Automatic.ALL -> true
+            Automatic.AM -> TabType.AM == tabType
+            else -> TabType.PM == tabType
+        }
+    }
+
+    fun cron(tabType: TabType): String {
+        return if (TabType.AM == tabType) {
+            "0 55 9 " + cycle.cron
+        } else {
+            "0 55 14 " + cycle.cron
+        }
+    }
+}
+
+/**
+ * 其他
+ */
+class Other constructor(
+    var tabShow: TabShow = TabShow.ALL
+) {
+
+    fun isTabShow(tabType: TabType): Boolean {
+        return when (tabShow) {
+            TabShow.ALL -> true
+            TabShow.AM -> TabType.AM == tabType
+            else -> TabType.PM == tabType
+        }
     }
 }

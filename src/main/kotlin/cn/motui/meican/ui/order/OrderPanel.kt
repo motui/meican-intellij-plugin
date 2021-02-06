@@ -2,87 +2,80 @@ package cn.motui.meican.ui.order
 
 import cn.motui.meican.MeiCanBundle.message
 import cn.motui.meican.NOTIFICATIONS_ID
-import cn.motui.meican.model.TabStatus
 import cn.motui.meican.model.ui.TabData
-import cn.motui.meican.ui.EmptyForm
-import cn.motui.meican.ui.OrderForm
+import cn.motui.meican.ui.OrderWindowForm
+import cn.motui.meican.ui.settings.OptionsConfigurable
 import cn.motui.meican.util.Notifications
 import cn.motui.meican.util.dataService
+import cn.motui.meican.util.settings
+import com.intellij.ui.components.labels.LinkLabel
+import com.intellij.ui.components.labels.LinkListener
+import java.awt.CardLayout
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
-import javax.swing.JPanel
 import javax.swing.SwingUtilities
 import kotlin.math.abs
 
 /**
- * 主面板
+ * OrderPanel
  */
-class OrderPanel {
-    private val form = OrderForm()
-    private var targetDateTime = LocalDateTime.now()
-    private var currentTabSelectedIndex = 0
+class OrderPanel : OrderWindowForm() {
+    private var targetDateTime: LocalDateTime = LocalDateTime.now()
 
     init {
-        form.preButton.addActionListener { preButtonAction() }
-        form.nextButton.addActionListener { nextButtonAction() }
-        form.label.text = labelText()
-        renderUi()
+        openSettingLinkLabel.text = message("order.tool.view.setting")
+        timeLabel.text = timeText()
+        preButton.text = message("order.tool.view.pre.button.text")
+        preButton.addActionListener { buttonAction(-1) }
+        nextButton.text = message("order.tool.view.next.button.text")
+        nextButton.addActionListener { buttonAction(1) }
+        openSettingLinkLabel.setListener(OpenSettingListener(), null)
+        refreshUi()
     }
 
     fun refreshUi() {
-        currentTabSelectedIndex = form.tabbedPane.selectedIndex
         renderUi()
     }
 
-    fun root(): JPanel {
-        return form.rootPanel
+    private fun renderUi() {
+        if (settings.account.isVerified()) {
+            renderTabbedUi()
+        } else {
+            showMessagePane()
+        }
     }
 
-    private fun renderUi() {
+    private fun renderTabbedUi() {
         SwingUtilities.invokeLater {
-            form.tabbedPane.removeAll()
             val tabDataList: List<TabData> = dataService.getDateData(targetDateTime)
+            tabbedPane.removeAll()
             tabDataList.forEach(
                 Consumer { tabData: TabData ->
-                    val content: JPanel?
-                    val targetTime = tabData.targetTime
-                    content = when (tabData.tabStatus) {
-                        TabStatus.ORDER -> tabData.orderUniqueId?.let {
-                            OrderDetailPanel(it).root()
-                        }
-                        TabStatus.AVAILABLE -> DateOrderPanel(
-                            this,
-                            targetTime,
-                            tabData.userTabUniqueId,
-                            tabData.corpNamespace
-                        ).root()
-                        else -> EmptyForm(tabData.reason).root
+                    if (settings.other.isTabShow(tabData.type())) {
+                        tabbedPane.addTab(tabData.title, TabPanel(tabData.type(), targetDateTime).root())
                     }
-                    form.tabbedPane.addTab(tabData.title, content)
                 }
             )
-            form.tabbedPane.selectedIndex = currentTabSelectedIndex
+            showTabbedPane()
         }
     }
 
-    private fun preButtonAction() {
-        SwingUtilities.invokeLater {
-            if (checkTargetTime(targetDateTime.plusDays(-1))) {
-                targetDateTime = targetDateTime.plusDays(-1)
-                form.label.text = labelText()
-                renderUi()
-            }
-        }
+    private fun showMessagePane() {
+        (root.layout as CardLayout).show(root, CARD_MESSAGE)
     }
 
-    private fun nextButtonAction() {
+    private fun showTabbedPane() {
+        (root.layout as CardLayout).show(root, CARD_TABBED)
+    }
+
+    private fun buttonAction(day: Long) {
         SwingUtilities.invokeLater {
-            if (checkTargetTime(targetDateTime.plusDays(1))) {
-                targetDateTime = targetDateTime.plusDays(1)
-                form.label.text = labelText()
+            if (checkTargetTime(targetDateTime.plusDays(day))) {
+                targetDateTime = targetDateTime.plusDays(day)
+                timeLabel.text = timeText()
                 renderUi()
             }
         }
@@ -94,24 +87,35 @@ class OrderPanel {
         if (result) {
             Notifications.showErrorNotification(
                 NOTIFICATIONS_ID,
-                message("order.tool.window.check.target.time.notification.title"),
-                message("order.tool.window.check.target.time.notification.error")
+                message("order.tool.view.check.target.time.notification.title"),
+                message("order.tool.view.check.target.time.notification.error")
             )
         }
         return !result
     }
 
-    private fun labelText(): String {
+    private fun timeText(): String {
         var format = targetDateTime.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + " "
         format += when (targetDateTime.dayOfWeek) {
-            DayOfWeek.MONDAY -> message("order.tool.window.monday")
-            DayOfWeek.TUESDAY -> message("order.tool.window.tuesday")
-            DayOfWeek.WEDNESDAY -> message("order.tool.window.wednesday")
-            DayOfWeek.THURSDAY -> message("order.tool.window.thursday")
-            DayOfWeek.FRIDAY -> message("order.tool.window.friday")
-            DayOfWeek.SATURDAY -> message("order.tool.window.saturday")
-            else -> message("order.tool.window.sunday")
+            DayOfWeek.MONDAY -> message("order.tool.view.monday")
+            DayOfWeek.TUESDAY -> message("order.tool.view.tuesday")
+            DayOfWeek.WEDNESDAY -> message("order.tool.view.wednesday")
+            DayOfWeek.THURSDAY -> message("order.tool.view.thursday")
+            DayOfWeek.FRIDAY -> message("order.tool.view.friday")
+            DayOfWeek.SATURDAY -> message("order.tool.view.saturday")
+            else -> message("order.tool.view.sunday")
         }
         return format
+    }
+
+    inner class OpenSettingListener : LinkListener<String> {
+        override fun linkSelected(aSource: LinkLabel<*>?, aLinkData: String?) {
+            OptionsConfigurable.showSettingsDialog(null)
+        }
+    }
+
+    companion object {
+        private const val CARD_MESSAGE = "CARD_MESSAGE"
+        private const val CARD_TABBED = "CARD_TABBED"
     }
 }

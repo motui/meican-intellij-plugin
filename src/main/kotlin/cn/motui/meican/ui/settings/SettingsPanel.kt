@@ -5,7 +5,10 @@ import cn.motui.meican.NOTIFICATIONS_ID
 import cn.motui.meican.Settings
 import cn.motui.meican.exception.MeiCanLoginException
 import cn.motui.meican.job.NotificationScheduler
+import cn.motui.meican.job.OrderAutomaticScheduler
+import cn.motui.meican.model.TabType
 import cn.motui.meican.ui.SettingForm
+import cn.motui.meican.ui.order.OrderView
 import cn.motui.meican.ui.selected
 import cn.motui.meican.util.Notifications
 import cn.motui.meican.util.dataService
@@ -21,13 +24,24 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         usernameLabel.text = message("setting.options.account.label.username")
         passwordLabel.text = message("setting.options.account.label.password")
         testButton.text = message("setting.option.account.button")
+        // 通知
         noticePanel.border = IdeBorderFactory.createTitledBorder(message("setting.options.notice"))
-        noticeAmCheckBox.text = message("setting.options.notice.am")
-        noticePmCheckBox.text = message("setting.options.notice.pm")
+        noticeTabLabel.text = message("setting.options.notice.tab.label")
+        Tab.values().forEach { noticeTabComboBox.addItem(it) }
         noticeTimeLabel.text = message("setting.options.notice.label.time")
         NoticeTime.values().forEach { timeComboBox.addItem(it) }
         noticeCycleLabel.text = message("setting.options.notice.label.cycle")
-        NoticeCycle.values().forEach { cycleComboBox.addItem(it) }
+        Cycle.values().forEach { cycleComboBox.addItem(it) }
+        // 自动点餐
+        automaticPanel.border = IdeBorderFactory.createTitledBorder(message("setting.options.order"))
+        automaticLabel.text = message("setting.order.automatic.label")
+        Automatic.values().forEach { automaticComboBox.addItem(it) }
+        orderCycleLabel.text = message("setting.options.order.label.cycle")
+        Cycle.values().forEach { orderCycleComboBox.addItem(it) }
+        // 其他设置
+        otherPanel.border = IdeBorderFactory.createTitledBorder(message("setting.options.other"))
+        tabShowLabel.text = message("setting.other.tab.show.label")
+        TabShow.values().forEach { tabShowComboBox.addItem(it) }
         testButton.addActionListener {
             SwingUtilities.invokeLater {
                 val password = String(passwordField.password)
@@ -56,10 +70,12 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
             val settings = settings
             return settings.account.username != usernameField.text ||
                 settings.account.getPassword() != String(passwordField.password) ||
-                settings.notice.am != noticeAmCheckBox.isSelected ||
-                settings.notice.pm != noticePmCheckBox.isSelected ||
+                settings.notice.tab != noticeTabComboBox.selectedItem ||
                 settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
-                settings.notice.cycle != cycleComboBox.selectedItem
+                settings.notice.cycle != cycleComboBox.selectedItem ||
+                settings.order.automatic != automaticComboBox.selectedItem ||
+                settings.order.cycle != orderCycleComboBox.selectedItem ||
+                settings.other.tabShow != tabShowComboBox.selectedItem
         }
 
     fun apply() {
@@ -68,10 +84,12 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
             val password = String(passwordField.password)
             settings.account.username = usernameField.text
             settings.account.setPassword(password)
-            settings.notice.am = noticeAmCheckBox.isSelected
-            settings.notice.pm = noticePmCheckBox.isSelected
+            settings.notice.tab = noticeTabComboBox.selected ?: Tab.NO
             settings.notice.beforeClosingTime = timeComboBox.selected ?: NoticeTime.M30
-            settings.notice.cycle = cycleComboBox.selected ?: NoticeCycle.EVERYDAY
+            settings.notice.cycle = cycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
+            settings.order.automatic = automaticComboBox.selected ?: Automatic.NO
+            settings.order.cycle = orderCycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
+            settings.other.tabShow = tabShowComboBox.selected ?: TabShow.ALL
             try {
                 // 刷新账户信息
                 dataService.refresh(settings.account.username, password)
@@ -80,17 +98,19 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
                 settings.account.verification = false
             }
             // 创建/更新job
-            val beforeClosing = settings.notice.beforeClosingTime != timeComboBox.selected ?: NoticeTime.M30
-            val am =
-                (settings.notice.am != noticeAmCheckBox.isSelected or beforeClosing) and noticeAmCheckBox.isSelected
-            val pm =
-                (settings.notice.pm != noticePmCheckBox.isSelected or beforeClosing) and noticePmCheckBox.isSelected
-            if (am) {
-                NotificationScheduler.scheduler(notice.amCron(), NotificationScheduler.JobType.AM)
+            if (settings.notice.isNotice(TabType.AM)) {
+                NotificationScheduler.scheduler(notice.cron(TabType.AM), TabType.AM)
             }
-            if (pm) {
-                NotificationScheduler.scheduler(notice.pmCron(), NotificationScheduler.JobType.PM)
+            if (settings.notice.isNotice(TabType.PM)) {
+                NotificationScheduler.scheduler(notice.cron(TabType.PM), TabType.PM)
             }
+            if (settings.order.isOrderAutomatic(TabType.AM)) {
+                OrderAutomaticScheduler.scheduler(order.cron(TabType.AM), TabType.AM)
+            }
+            if (settings.order.isOrderAutomatic(TabType.PM)) {
+                OrderAutomaticScheduler.scheduler(order.cron(TabType.PM), TabType.PM)
+            }
+            OrderView.instance.refreshUi()
         }
     }
 
@@ -98,9 +118,11 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
     fun reset() {
         usernameField.text = settings.account.username
         passwordField.text = settings.account.getPassword()
-        noticeAmCheckBox.isSelected = settings.notice.am
-        noticePmCheckBox.isSelected = settings.notice.pm
+        noticeTabComboBox.selected = settings.notice.tab
         timeComboBox.selected = settings.notice.beforeClosingTime
         cycleComboBox.selected = settings.notice.cycle
+        automaticComboBox.selected = settings.order.automatic
+        orderCycleComboBox.selected = settings.order.cycle
+        tabShowComboBox.selected = settings.other.tabShow
     }
 }

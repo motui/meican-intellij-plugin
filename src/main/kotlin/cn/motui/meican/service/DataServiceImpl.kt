@@ -80,6 +80,7 @@ class DataServiceImpl : DataService {
         val calendarRestaurant = orderDetail.calendarRestaurants[0]
         val dishItem = calendarRestaurant.dishItemList[0]
         return OrderDetail(
+            orderDetail.uniqueId,
             orderDetail.corpOrderId,
             orderDetail.pickUpMessage,
             orderDetail.postbox,
@@ -87,7 +88,8 @@ class DataServiceImpl : DataService {
             calendarRestaurant.uniqueId,
             calendarRestaurant.restaurantName,
             dishItem.dish.toDish(),
-            dishItem.count
+            dishItem.count,
+            orderDetail.readyToDelete
         )
     }
 
@@ -98,5 +100,9 @@ class DataServiceImpl : DataService {
         dishId: Long
     ): String {
         return meiCanClient.order(userTabUniqueId, addressUniqueId, targetDateTime, dishId)
+    }
+
+    override fun cancelOrder(orderUniqueId: String) {
+        meiCanClient.cancelOrder(orderUniqueId)
     }
 }

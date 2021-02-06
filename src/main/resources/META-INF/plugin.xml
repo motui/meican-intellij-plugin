@@ -18,6 +18,7 @@
         <li>Order a meal</li>
         <li>View order information</li>
         <li>Remind before order ends</li>
+        <li>Automatic ordering before order end</li>
       </ul>
       </p>
     ]]></description>
@@ -25,8 +26,8 @@
     <!--suppress PluginXmlValidity -->
     <change-notes><![CDATA[
       <ul>
-        <li>Refactor core code using Kotlin</li>
-        <li>International configuration</li>
+        <li>Automatic ordering before order end</li>
+        <li>Cancel order</li>
         <li>Optimize some details</li>
       </ul>
       <a href="https://github.com/motui/meican-intellij-plugin/blob/main/CHANGELOG.md"><b>Full Changelog History</b></a>
@@ -38,9 +39,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="cn.motui.meican.Settings"/>
+        <applicationService serviceImplementation="cn.motui.meican.ui.order.OrderView"/>
         <toolWindow id="Mei Can" anchor="right" secondary="true"
-                    factoryClass="cn.motui.meican.ui.OrderToolWindowFactory"/>
-        <postStartupActivity implementation="cn.motui.meican.notification.NotificationStartupActivity"/>
+                    factoryClass="cn.motui.meican.ui.order.OrderToolWindowFactory"/>
+        <postStartupActivity implementation="cn.motui.meican.MeiCanStartupActivity"/>
         <applicationConfigurable instance="cn.motui.meican.ui.settings.OptionsConfigurable"/>
         <applicationService serviceInterface="cn.motui.meican.service.DataService"
                             serviceImplementation="cn.motui.meican.service.DataServiceImpl"/>

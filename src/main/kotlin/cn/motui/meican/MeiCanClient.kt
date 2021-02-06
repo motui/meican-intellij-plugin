@@ -6,6 +6,7 @@ import cn.motui.meican.exception.MeiCanLoginException
 import cn.motui.meican.model.api.Account
 import cn.motui.meican.model.api.vo.AddOrderResponseVO
 import cn.motui.meican.model.api.vo.CalendarVO
+import cn.motui.meican.model.api.vo.CancelOrderResponseVO
 import cn.motui.meican.model.api.vo.CorpAddressVO
 import cn.motui.meican.model.api.vo.LoginVO
 import cn.motui.meican.model.api.vo.OrderDetailVO
@@ -233,6 +234,30 @@ class MeiCanClient {
             addOrderResponseVO.order.uniqueId
         } catch (e: IOException) {
             throw HttpRequestException("$MEI_CAN_URL_ADD_ORDER request error", e)
+        }
+    }
+
+    /**
+     * 取消订单
+     * @param orderUniqueId 订单ID
+     */
+    fun cancelOrder(orderUniqueId: String) {
+        val parameters: MutableList<BasicNameValuePair> = ArrayList()
+        parameters.add(BasicNameValuePair("restoreCart", "false"))
+        parameters.add(BasicNameValuePair("type", "CORP_ORDER"))
+        parameters.add(BasicNameValuePair("uniqueId", orderUniqueId))
+        val urlParameter: Map<String, Any> = urlParameter()
+        try {
+            val responseStr = post(MEI_CAN_URL_DELETE, urlParameter, parameters)
+            val cancelOrderResponse = JsonUtil.from(
+                responseStr,
+                CancelOrderResponseVO::class.java
+            )
+            if (!cancelOrderResponse.isSuccess) {
+                throw MeiCanAddOrderException("cancel order error.$responseStr")
+            }
+        } catch (e: IOException) {
+            throw HttpRequestException("$MEI_CAN_URL_DELETE request error", e)
         }
     }
 

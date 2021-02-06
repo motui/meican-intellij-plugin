@@ -4,15 +4,31 @@
 
 ## [Unreleased]
 
-## [0.2.0](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2)
-使用Kotlin重构核心代码
+## [0.2.1](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.1)
+
 ### Added
+
+- 自动订餐(自动点餐默认为随机，地址默认第一个)
+- 面板显示设置
+- 取消订单
+
+### Changed
+
+- 通知项由ChekBox改为ComboBox
+- 优化页面展示逻辑
+
+## [0.2.0](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.0)
+
+使用Kotlin重构核心代码
+
+### Added
+
 - 国际化配置
 
 ### Changed
+
 - 代码模块拆分、逻辑优化
 - 统一提示风格
-
 
 ## [0.1.4](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.1.4)
 

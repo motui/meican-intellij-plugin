@@ -2,7 +2,7 @@ package cn.motui.meican.ui.settings
 
 import cn.motui.meican.MeiCanBundle.message
 
-enum class NoticeCycle(
+enum class Cycle(
     private val displayName: String,
     val cron: String
 ) {
