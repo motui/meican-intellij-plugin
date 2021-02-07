@@ -3,6 +3,18 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [unspecified]
 
 ## [0.2.1](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.1)
 
