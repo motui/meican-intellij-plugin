@@ -1,12 +1,8 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
 # meican-intellij-plugin Changelog
+
 ## [Unreleased]
-### Added
-- 自动订餐策略
-
-## [0.2.2](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.2)
-
 ### Added
 
 - 增加tool window图标
