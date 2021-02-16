@@ -75,6 +75,10 @@ detekt {
     ignoreFailures = true
 }
 
+changelog {
+    version = "${project.version}"
+}
+
 tasks {
     // Set the compatibility versions to 1.8
     withType<JavaCompile> {
@@ -112,6 +116,7 @@ tasks {
         // Get the latest available change notes from the changelog file
         changeNotes(
             closure {
+                changelog.keepUnreleasedSection = false
                 changelog.getLatest().toHTML()
             }
         )
