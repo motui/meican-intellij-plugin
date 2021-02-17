@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.2.2]
+### Added
 - 增加tool window图标
 ### Changed
 - 依赖插件版本升级
