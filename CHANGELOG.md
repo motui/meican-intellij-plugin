@@ -3,6 +3,18 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [0.2.4]
 ### Changed
 - Optimize UI rendering
 ### Fixed
