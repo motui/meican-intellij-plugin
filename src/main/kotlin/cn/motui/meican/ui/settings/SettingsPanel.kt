@@ -69,13 +69,13 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         get() {
             val settings = settings
             return settings.account.username != usernameField.text ||
-                    settings.account.getPassword() != String(passwordField.password) ||
-                    settings.notice.tab != noticeTabComboBox.selectedItem ||
-                    settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
-                    settings.notice.cycle != cycleComboBox.selectedItem ||
-                    settings.order.automatic != automaticComboBox.selectedItem ||
-                    settings.order.cycle != orderCycleComboBox.selectedItem ||
-                    settings.other.tabShow != tabShowComboBox.selectedItem
+                settings.account.getPassword() != String(passwordField.password) ||
+                settings.notice.tab != noticeTabComboBox.selectedItem ||
+                settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
+                settings.notice.cycle != cycleComboBox.selectedItem ||
+                settings.order.automatic != automaticComboBox.selectedItem ||
+                settings.order.cycle != orderCycleComboBox.selectedItem ||
+                settings.other.tabShow != tabShowComboBox.selectedItem
         }
 
     fun apply() {
