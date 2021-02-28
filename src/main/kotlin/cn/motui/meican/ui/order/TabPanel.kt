@@ -14,6 +14,7 @@ import cn.motui.meican.model.ui.TabData
 import cn.motui.meican.ui.TabWindowForm
 import cn.motui.meican.ui.UI
 import cn.motui.meican.util.Notifications
+import cn.motui.meican.util.application
 import cn.motui.meican.util.dataService
 import cn.motui.meican.util.toLocalDateTime
 import java.awt.CardLayout
@@ -21,7 +22,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.swing.JOptionPane
 import javax.swing.JPanel
-import javax.swing.SwingUtilities
 
 /**
  * TabPanel
@@ -42,7 +42,7 @@ class TabPanel constructor(
     }
 
     private fun renderUi() {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             val tabDataList: List<TabData> = dataService.getTabData(targetDateTime)
             val tabData = tabDataList.first { tabData -> tabData.type() == tabType }
             when (tabData.tabStatus) {
@@ -54,7 +54,7 @@ class TabPanel constructor(
     }
 
     private fun renderOrderUi(tabData: TabData) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             orderButton.text = message("tab.button.order")
             orderButton.addActionListener { buttonOrderListener(tabData) }
             renderRestaurantUi(tabData)
@@ -64,7 +64,7 @@ class TabPanel constructor(
     }
 
     private fun renderOrderDetailUi(tabData: TabData) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             cancelOrderButton.text = message("tab.button.order.cancel")
             tabData.corpOrderUser?.let {
                 val orderDetail = dataService.getOrderDetail(it.orderUniqueId)
@@ -90,7 +90,7 @@ class TabPanel constructor(
     }
 
     private fun renderEmptyUi(tabData: TabData) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             label.text = tabData.reason
             showMessagePane()
         }
@@ -111,7 +111,7 @@ class TabPanel constructor(
             JOptionPane.PLAIN_MESSAGE
         )
         if (JOptionPane.YES_OPTION == operate) {
-            SwingUtilities.invokeLater {
+            application.invokeLater {
                 cancelOrderButton.isEnabled = false
                 try {
                     dataService.cancelOrder(orderDetail.uniqueId)
@@ -161,7 +161,7 @@ class TabPanel constructor(
             JOptionPane.PLAIN_MESSAGE
         )
         if (JOptionPane.YES_OPTION == operate) {
-            SwingUtilities.invokeLater {
+            application.invokeLater {
                 orderButton.isEnabled = false
                 try {
                     dataService.order(
@@ -213,7 +213,7 @@ class TabPanel constructor(
     }
 
     private fun renderRestaurantUi(tabData: TabData) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             val restaurantData = dataService.getRestaurantData(tabData.userTabUniqueId, tabData.targetDateTime)
             restaurantList.setListData(restaurantData.toTypedArray())
             restaurantList.addListSelectionListener {
@@ -226,7 +226,7 @@ class TabPanel constructor(
     }
 
     private fun renderAddressUi(tabData: TabData) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             val addressList = dataService.getAddress(tabData.corpNamespace)
             addressList.forEach {
                 addressComboBox.addItem(it)

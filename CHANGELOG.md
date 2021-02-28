@@ -3,18 +3,12 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
-### Added
-
 ### Changed
-
-### Deprecated
-
-### Removed
-
+- Optimize UI rendering
 ### Fixed
+- TabStatus add "NOT_YET"
 
-### Security
-## [0.2.3]
+## [0.2.3](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.3)
 ### Changed
 - 适配 2021.1 EAP
 ## [0.2.2](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.2)

@@ -11,9 +11,9 @@ import cn.motui.meican.ui.SettingForm
 import cn.motui.meican.ui.order.OrderView
 import cn.motui.meican.ui.selected
 import cn.motui.meican.util.Notifications
+import cn.motui.meican.util.application
 import cn.motui.meican.util.dataService
 import com.intellij.ui.IdeBorderFactory
-import javax.swing.SwingUtilities
 
 /**
  * 设置面板
@@ -43,7 +43,7 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         tabShowLabel.text = message("setting.other.tab.show.label")
         TabShow.values().forEach { tabShowComboBox.addItem(it) }
         testButton.addActionListener {
-            SwingUtilities.invokeLater {
+            application.invokeLater {
                 val password = String(passwordField.password)
                 if (usernameField.text.isNotBlank() and password.isNotBlank()) {
                     testButton.isEnabled = false
@@ -69,13 +69,13 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         get() {
             val settings = settings
             return settings.account.username != usernameField.text ||
-                settings.account.getPassword() != String(passwordField.password) ||
-                settings.notice.tab != noticeTabComboBox.selectedItem ||
-                settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
-                settings.notice.cycle != cycleComboBox.selectedItem ||
-                settings.order.automatic != automaticComboBox.selectedItem ||
-                settings.order.cycle != orderCycleComboBox.selectedItem ||
-                settings.other.tabShow != tabShowComboBox.selectedItem
+                    settings.account.getPassword() != String(passwordField.password) ||
+                    settings.notice.tab != noticeTabComboBox.selectedItem ||
+                    settings.notice.beforeClosingTime != timeComboBox.selectedItem ||
+                    settings.notice.cycle != cycleComboBox.selectedItem ||
+                    settings.order.automatic != automaticComboBox.selectedItem ||
+                    settings.order.cycle != orderCycleComboBox.selectedItem ||
+                    settings.other.tabShow != tabShowComboBox.selectedItem
         }
 
     fun apply() {

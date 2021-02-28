@@ -6,5 +6,10 @@ package cn.motui.meican.model
 enum class TabStatus {
     CLOSED,
     ORDER,
-    AVAILABLE
+    AVAILABLE,
+
+    /**
+     * 未开放
+     */
+    NOT_YET
 }

@@ -6,6 +6,7 @@ import cn.motui.meican.model.ui.TabData
 import cn.motui.meican.ui.OrderWindowForm
 import cn.motui.meican.ui.settings.OptionsConfigurable
 import cn.motui.meican.util.Notifications
+import cn.motui.meican.util.application
 import cn.motui.meican.util.dataService
 import cn.motui.meican.util.settings
 import com.intellij.ui.components.labels.LinkLabel
@@ -16,7 +17,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
-import javax.swing.SwingUtilities
 import kotlin.math.abs
 
 /**
@@ -49,7 +49,7 @@ class OrderPanel : OrderWindowForm() {
     }
 
     private fun renderTabbedUi() {
-        SwingUtilities.invokeLater {
+        application.invokeLater() {
             val tabDataList: List<TabData> = dataService.getTabData(targetDateTime)
             tabbedPane.removeAll()
             tabDataList.forEach(
@@ -72,7 +72,7 @@ class OrderPanel : OrderWindowForm() {
     }
 
     private fun buttonAction(day: Long) {
-        SwingUtilities.invokeLater {
+        application.invokeLater {
             if (checkTargetTime(targetDateTime.plusDays(day))) {
                 targetDateTime = targetDateTime.plusDays(day)
                 timeLabel.text = timeText()
