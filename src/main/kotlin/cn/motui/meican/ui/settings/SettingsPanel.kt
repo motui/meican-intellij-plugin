@@ -6,7 +6,6 @@ import cn.motui.meican.Settings
 import cn.motui.meican.exception.MeiCanLoginException
 import cn.motui.meican.job.NotificationScheduler
 import cn.motui.meican.job.OrderAutomaticScheduler
-import cn.motui.meican.model.TabType
 import cn.motui.meican.ui.SettingForm
 import cn.motui.meican.ui.order.OrderView
 import cn.motui.meican.ui.selected
@@ -79,39 +78,26 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
         }
 
     fun apply() {
-        @Suppress("Duplicates")
-        with(settings) {
-            val password = String(passwordField.password)
-            settings.account.username = usernameField.text
-            settings.account.setPassword(password)
-            settings.notice.tab = noticeTabComboBox.selected ?: Tab.NO
-            settings.notice.beforeClosingTime = timeComboBox.selected ?: NoticeTime.M30
-            settings.notice.cycle = cycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
-            settings.order.automatic = automaticComboBox.selected ?: Automatic.NO
-            settings.order.cycle = orderCycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
-            settings.other.tabShow = tabShowComboBox.selected ?: TabShow.ALL
-            try {
-                // 刷新账户信息
-                dataService.refresh(settings.account.username, password)
-                settings.account.verification = true
-            } catch (ignore: Exception) {
-                settings.account.verification = false
-            }
-            // 创建/更新job
-            if (settings.notice.isNotice(TabType.AM)) {
-                NotificationScheduler.scheduler(notice.cron(TabType.AM), TabType.AM)
-            }
-            if (settings.notice.isNotice(TabType.PM)) {
-                NotificationScheduler.scheduler(notice.cron(TabType.PM), TabType.PM)
-            }
-            if (settings.order.isOrderAutomatic(TabType.AM)) {
-                OrderAutomaticScheduler.scheduler(order.cron(TabType.AM), TabType.AM)
-            }
-            if (settings.order.isOrderAutomatic(TabType.PM)) {
-                OrderAutomaticScheduler.scheduler(order.cron(TabType.PM), TabType.PM)
-            }
-            OrderView.instance.refreshUi()
+        val password = String(passwordField.password)
+        settings.account.username = usernameField.text
+        settings.account.setPassword(password)
+        settings.notice.tab = noticeTabComboBox.selected ?: Tab.NO
+        settings.notice.beforeClosingTime = timeComboBox.selected ?: NoticeTime.M30
+        settings.notice.cycle = cycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
+        settings.order.automatic = automaticComboBox.selected ?: Automatic.NO
+        settings.order.cycle = orderCycleComboBox.selected ?: Cycle.MONDAY_TO_FRIDAY
+        settings.other.tabShow = tabShowComboBox.selected ?: TabShow.ALL
+        try {
+            // 刷新账户信息
+            dataService.refresh(settings.account.username, password)
+            settings.account.verification = true
+        } catch (ignore: Exception) {
+            settings.account.verification = false
         }
+        // 创建/更新/删除job
+        NotificationScheduler.schedule(settings.notice)
+        OrderAutomaticScheduler.schedule(settings.order)
+        OrderView.instance.refreshUi()
     }
 
     @Suppress("Duplicates")
