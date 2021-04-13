@@ -54,8 +54,8 @@ class OrderPanel : OrderWindowForm() {
             tabbedPane.removeAll()
             tabDataList.forEach(
                 Consumer { tabData: TabData ->
-                    if (settings.other.isTabShow(tabData.type())) {
-                        tabbedPane.addTab(tabData.title, TabPanel(tabData.type(), targetDateTime).root())
+                    if (settings.tabs.get(tabData.title)?.show == true) {
+                        tabbedPane.addTab(tabData.title, TabPanel(tabData.title, targetDateTime).root())
                     }
                 }
             )

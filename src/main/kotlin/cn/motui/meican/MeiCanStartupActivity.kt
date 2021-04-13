@@ -17,8 +17,8 @@ class MeiCanStartupActivity : StartupActivity {
             return
         }
         // 创建/更新/删除job
-        NotificationScheduler.schedule(settings.notice)
-        OrderAutomaticScheduler.schedule(settings.order)
+        NotificationScheduler.schedule(settings.notice, settings.tabs)
+        OrderAutomaticScheduler.schedule(settings.order, settings.tabs)
         RefreshScheduler.scheduler(RefreshJob.cron)
     }
 }

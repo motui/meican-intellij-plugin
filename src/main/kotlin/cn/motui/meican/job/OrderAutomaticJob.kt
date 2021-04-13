@@ -3,7 +3,6 @@ package cn.motui.meican.job
 import cn.motui.meican.MeiCanBundle
 import cn.motui.meican.NOTIFICATIONS_ID
 import cn.motui.meican.model.TabStatus
-import cn.motui.meican.model.TabType
 import cn.motui.meican.model.ui.TabData
 import cn.motui.meican.ui.order.OrderView
 import cn.motui.meican.util.Notifications
@@ -12,30 +11,33 @@ import org.apache.commons.lang3.RandomUtils
 import org.quartz.Job
 import org.quartz.JobExecutionContext
 import java.time.LocalDateTime
+import java.util.function.Function
+import java.util.stream.Collectors
 
 /**
  * 自动点餐JOB
  */
 class OrderAutomaticJob : Job {
     override fun execute(context: JobExecutionContext?) {
-        val jobTypeStr = context?.mergedJobDataMap?.get(jobKey)
-        val jobType = TabType.valueOf(jobTypeStr as String)
+        val title = context?.mergedJobDataMap?.get(jobKey)
         var content: String? = null
         try {
-            val dateData = dataService.getTabData(LocalDateTime.now())
-            val tabData: TabData = if (TabType.AM == jobType) dateData[0] else dateData[1]
-            if (tabData.tabStatus == TabStatus.AVAILABLE) {
-                content = orderAutomatic(tabData)
+            val tabDataList = dataService.getTabData(LocalDateTime.now())
+            val tabData = tabDataList.stream()
+                .collect(Collectors.toMap(TabData::title, Function.identity()))[title]
+            tabData?.let {
+                if (it.tabStatus == TabStatus.AVAILABLE) {
+                    content = orderAutomatic(it)
+                }
             }
         } catch (e: Exception) {
-            content = if (TabType.AM == jobType) MeiCanBundle.message("order.notification.am")
-            else MeiCanBundle.message("order.notification.pm")
+            content = MeiCanBundle.message("order.notification").format("")
         } finally {
             content?.let {
                 Notifications.showInfoNotification(
                     NOTIFICATIONS_ID,
                     MeiCanBundle.message("order.automatic.notification.title"),
-                    content
+                    it
                 )
             }
         }

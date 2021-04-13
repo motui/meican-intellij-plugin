@@ -11,6 +11,12 @@ import java.time.LocalDateTime
  * 数据服务
  */
 interface DataService {
+
+    /**
+     * 是否可以发送请求
+     */
+    fun isCanRequest(): Boolean
+
     /**
      * 时间数据
      *

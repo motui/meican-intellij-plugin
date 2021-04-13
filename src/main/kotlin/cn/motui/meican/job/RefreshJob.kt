@@ -1,6 +1,5 @@
 package cn.motui.meican.job
 
-import cn.motui.meican.model.TabStatus
 import cn.motui.meican.ui.order.OrderView
 import cn.motui.meican.util.dataService
 import org.quartz.Job
@@ -16,13 +15,14 @@ class RefreshJob : Job {
     override fun execute(context: JobExecutionContext?) {
         val now = LocalDateTime.now()
         try {
+            if (!dataService.isCanRequest()) {
+                return
+            }
             val tabDataList = dataService.getTabData(now)
             tabDataList.forEach { tabData ->
-                if (TabStatus.ORDER == tabData.tabStatus) {
-                    tabData.corpOrderUser?.let {
-                        if (it.isRefresh()) {
-                            OrderView.instance.refreshUi()
-                        }
+                tabData.corpOrderUser?.let {
+                    if (it.isRefresh()) {
+                        OrderView.instance.refreshUi()
                     }
                 }
             }

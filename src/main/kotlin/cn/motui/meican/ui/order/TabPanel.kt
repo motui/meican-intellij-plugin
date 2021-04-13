@@ -5,7 +5,6 @@ import cn.motui.meican.MeiCanBundle.message
 import cn.motui.meican.NOTIFICATIONS_ID
 import cn.motui.meican.exception.MeiCanAddOrderException
 import cn.motui.meican.model.TabStatus
-import cn.motui.meican.model.TabType
 import cn.motui.meican.model.api.Address
 import cn.motui.meican.model.api.Dish
 import cn.motui.meican.model.ui.OrderDetail
@@ -20,6 +19,8 @@ import cn.motui.meican.util.toLocalDateTime
 import java.awt.CardLayout
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.function.Function
+import java.util.stream.Collectors
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 
@@ -27,7 +28,7 @@ import javax.swing.JPanel
  * TabPanel
  */
 class TabPanel constructor(
-    private val tabType: TabType,
+    private val title: String,
     private val targetDateTime: LocalDateTime
 ) : TabWindowForm() {
 
@@ -44,11 +45,14 @@ class TabPanel constructor(
     private fun renderUi() {
         application.invokeLater {
             val tabDataList: List<TabData> = dataService.getTabData(targetDateTime)
-            val tabData = tabDataList.first { tabData -> tabData.type() == tabType }
-            when (tabData.tabStatus) {
-                TabStatus.AVAILABLE -> renderOrderUi(tabData)
-                TabStatus.ORDER -> renderOrderDetailUi(tabData)
-                else -> renderEmptyUi(tabData)
+            val map = tabDataList.stream().collect(Collectors.toMap(TabData::title, Function.identity()))
+            val tabData = map[title]
+            tabData?.let {
+                when (it.tabStatus) {
+                    TabStatus.AVAILABLE -> renderOrderUi(it)
+                    TabStatus.ORDER -> renderOrderDetailUi(it)
+                    else -> renderEmptyUi(it)
+                }
             }
         }
     }

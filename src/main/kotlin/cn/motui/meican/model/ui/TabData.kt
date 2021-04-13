@@ -1,7 +1,6 @@
 package cn.motui.meican.model.ui
 
 import cn.motui.meican.model.TabStatus
-import cn.motui.meican.model.TabType
 import java.time.LocalDateTime
 
 /**
@@ -11,19 +10,16 @@ class TabData(
     val title: String,
     val tabStatus: TabStatus,
     val reason: String,
+    val targetDateTime: LocalDateTime,
+
+    val openingTime: OpeningTime,
+
     val userTabUniqueId: String,
+
     val corpUniqueId: String,
     val corpNamespace: String,
-    val corpOrderUser: CorpOrderUser?,
-    val targetDateTime: LocalDateTime
+    val corpOrderUser: CorpOrderUser?
 ) {
-
-    fun type(): TabType {
-        if (targetDateTime.hour <= 12) {
-            return TabType.AM
-        }
-        return TabType.PM
-    }
 
     class CorpOrderUser constructor(
         val orderUniqueId: String,

@@ -4,17 +4,15 @@
 
 ## [Unreleased]
 ### Added
-
+- Support more tab options
 ### Changed
-
-### Deprecated
-
+- Refactor setting UI and logic
 ### Removed
-
+- Remove useless class
 ### Fixed
+- Fix known bugs
 
-### Security
-## [0.2.5]
+## [0.2.5](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.2.5)
 ### Fixed
 - job does not stop 
 

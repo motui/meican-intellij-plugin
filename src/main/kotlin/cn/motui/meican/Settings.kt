@@ -1,11 +1,8 @@
 package cn.motui.meican
 
-import cn.motui.meican.model.TabType
-import cn.motui.meican.ui.settings.Automatic
+import cn.motui.meican.model.ui.OpeningTime
 import cn.motui.meican.ui.settings.Cycle
 import cn.motui.meican.ui.settings.NoticeTime
-import cn.motui.meican.ui.settings.Tab
-import cn.motui.meican.ui.settings.TabShow
 import cn.motui.meican.util.PasswordSafeDelegate
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.ServiceManager
@@ -13,6 +10,8 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 import com.intellij.util.xmlb.annotations.Transient
+import java.util.function.Function
+import java.util.stream.Collectors
 
 /**
  * Settings
@@ -26,6 +25,11 @@ class Settings : PersistentStateComponent<Settings> {
     var account: Account = Account()
 
     /**
+     * Tab
+     */
+    var tabs: Tabs = Tabs()
+
+    /**
      * 通知选项
      */
     var notice: Notice = Notice()
@@ -34,11 +38,6 @@ class Settings : PersistentStateComponent<Settings> {
      * 订餐
      */
     var order: Order = Order()
-
-    /**
-     * 其他
-     */
-    var other: Other = Other()
 
     override fun getState(): Settings = this
 
@@ -88,11 +87,6 @@ class Account constructor(
  */
 class Notice constructor(
     /**
-     * 类型
-     */
-    var tab: Tab = Tab.NO,
-
-    /**
      * 周期
      */
     var cycle: Cycle = Cycle.MONDAY_TO_FRIDAY,
@@ -104,27 +98,12 @@ class Notice constructor(
 ) {
 
     /**
-     * Cron表达式
+     * cron 表达式
+     * @param closeTime 关闭时间 HH:mm
      */
-    private fun cron(hour: Int): String {
-        return beforeClosingTime.cron(hour) + " " + cycle.cron
-    }
-
-    fun cron(tabType: TabType): String {
-        return if (TabType.AM == tabType) {
-            cron(10)
-        } else {
-            cron(15)
-        }
-    }
-
-    fun isNotice(tabType: TabType): Boolean {
-        return when (tab) {
-            Tab.NO -> false
-            Tab.ALL -> true
-            Tab.AM -> TabType.AM == tabType
-            else -> TabType.PM == tabType
-        }
+    fun corn(closeTime: String): String {
+        val split = closeTime.split(":")
+        return this.beforeClosingTime.cron(split[0].toInt(), split[1].toInt()) + " " + cycle.cron
     }
 }
 
@@ -132,39 +111,49 @@ class Notice constructor(
  * 点餐
  */
 class Order constructor(
-    var automatic: Automatic = Automatic.NO,
     var cycle: Cycle = Cycle.MONDAY_TO_FRIDAY,
+    /**
+     * 截止前{time}通知
+     */
+    var beforeClosingTime: NoticeTime = NoticeTime.M30
 ) {
-    fun isOrderAutomatic(tabType: TabType): Boolean {
-        return when (automatic) {
-            Automatic.NO -> false
-            Automatic.ALL -> true
-            Automatic.AM -> TabType.AM == tabType
-            else -> TabType.PM == tabType
-        }
-    }
 
-    fun cron(tabType: TabType): String {
-        return if (TabType.AM == tabType) {
-            "0 55 9 " + cycle.cron
-        } else {
-            "0 55 14 " + cycle.cron
-        }
+    /**
+     * cron 表达式
+     * @param closeTime 关闭时间 HH:mm
+     */
+    fun corn(closeTime: String): String {
+        val split = closeTime.split(":")
+        return this.beforeClosingTime.cron(split[0].toInt(), split[1].toInt()) + " " + cycle.cron
     }
 }
 
 /**
- * 其他
+ * Tab数据
  */
-class Other constructor(
-    var tabShow: TabShow = TabShow.ALL
-) {
+class Tab constructor(
+    var title: String = "",
+    var openingTime: OpeningTime = OpeningTime(),
+    var show: Boolean = false,
+    var notice: Boolean = false,
+    var automatic: Boolean = false
+)
 
-    fun isTabShow(tabType: TabType): Boolean {
-        return when (tabShow) {
-            TabShow.ALL -> true
-            TabShow.AM -> TabType.AM == tabType
-            else -> TabType.PM == tabType
-        }
+/**
+ * Tab数据对象
+ */
+class Tabs constructor(
+    var tabSet: Set<Tab> = mutableSetOf()
+) {
+    private fun toMap(): Map<String, Tab> {
+        return tabSet.stream().collect(Collectors.toMap(Tab::title, Function.identity()))
+    }
+
+    fun get(title: String): Tab? {
+        return this.toMap()[title]
+    }
+
+    fun contains(title: String): Boolean {
+        return toMap().containsKey(title)
     }
 }

@@ -4,6 +4,7 @@ import cn.motui.meican.model.TabStatus
 import cn.motui.meican.model.api.Account
 import cn.motui.meican.model.api.Address
 import cn.motui.meican.model.api.Dish
+import cn.motui.meican.model.ui.OpeningTime
 import cn.motui.meican.model.ui.OrderDetail
 import cn.motui.meican.model.ui.RestaurantData
 import cn.motui.meican.model.ui.TabData
@@ -17,6 +18,10 @@ import java.time.LocalDateTime
  */
 @Service
 class DataServiceImpl : DataService {
+    override fun isCanRequest(): Boolean {
+        return meiCanClient.isVerified()
+    }
+
     override fun getTabData(targetDateTime: LocalDateTime): MutableList<TabData> {
         val calendar = meiCanClient.calendar(targetDateTime, targetDateTime)
         val tabDataList: MutableList<TabData> = mutableListOf()
@@ -28,16 +33,26 @@ class DataServiceImpl : DataService {
                     corpOrderUser.corpOrderStatus
                 )
             }
+            val openingTime = it.openingTime.let { open ->
+                OpeningTime(
+                    open.uniqueId,
+                    open.openTime,
+                    open.closeTime,
+                    open.name
+                )
+            }
             tabDataList.add(
                 TabData(
                     it.title,
                     TabStatus.valueOf(it.status),
                     it.reason,
+                    it.targetTime.toLocalDateTime(),
+                    openingTime,
                     it.userTab.uniqueId,
                     it.userTab.corp.uniqueId,
                     it.userTab.corp.namespace,
-                    corpOrderUser,
-                    it.targetTime.toLocalDateTime()
+                    corpOrderUser
+
                 )
             )
         }

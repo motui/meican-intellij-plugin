@@ -24,4 +24,16 @@ enum class NoticeTime(
         }
         return "0 %d %d".format(60 - this.time, hour - 1)
     }
+
+    fun cron(hour: Int, minute: Int): String {
+        return if (H1 == this || H2 == this) {
+            "0 %d %d".format(minute, hour - this.time)
+        } else {
+            if (minute < this.time) {
+                "0 %d %d".format(60 + minute - this.time, hour - 1)
+            } else {
+                "0 %d %d".format(minute - this.time, hour)
+            }
+        }
+    }
 }

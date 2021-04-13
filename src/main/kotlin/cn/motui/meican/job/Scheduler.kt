@@ -2,9 +2,7 @@ package cn.motui.meican.job
 
 import cn.motui.meican.Notice
 import cn.motui.meican.Order
-import cn.motui.meican.model.TabType
-import cn.motui.meican.ui.settings.Automatic
-import cn.motui.meican.ui.settings.Tab
+import cn.motui.meican.Tabs
 import org.quartz.CronScheduleBuilder
 import org.quartz.CronTrigger
 import org.quartz.JobBuilder
@@ -21,7 +19,7 @@ const val jobKey: String = "JOB_KEY"
 private fun create(
     triggerKey: TriggerKey,
     cron: String,
-    jobType: TabType,
+    title: String,
     jobDetail: JobDetail
 ) {
     val scheduler = schedulerFactory.scheduler
@@ -29,7 +27,7 @@ private fun create(
         .newTrigger()
         .withIdentity(triggerKey)
         .withSchedule(CronScheduleBuilder.cronSchedule(cron))
-        .usingJobData(jobKey, jobType.name)
+        .usingJobData(jobKey, title)
         .build()
     scheduler.scheduleJob(jobDetail, trigger)
     if (!scheduler.isStarted) {
@@ -37,7 +35,7 @@ private fun create(
     }
 }
 
-private fun update(triggerKey: TriggerKey, trigger: CronTrigger, cron: String, jobType: TabType) {
+private fun update(triggerKey: TriggerKey, trigger: CronTrigger, cron: String, title: String) {
     if (trigger.cronExpression != cron) {
         schedulerFactory.scheduler
             .rescheduleJob(
@@ -45,7 +43,7 @@ private fun update(triggerKey: TriggerKey, trigger: CronTrigger, cron: String, j
                 trigger.triggerBuilder
                     .withIdentity(triggerKey)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cron))
-                    .usingJobData(jobKey, jobType.name)
+                    .usingJobData(jobKey, title)
                     .build()
             )
     }
@@ -56,42 +54,27 @@ private fun update(triggerKey: TriggerKey, trigger: CronTrigger, cron: String, j
  */
 class NotificationScheduler {
     companion object {
-        private const val amJobName: String = "AM_JOB"
-        private const val pmJobName: String = "PM_JOB"
-
-        private fun scheduler(cron: String, jobType: TabType) {
-            val jobName = if (TabType.AM == jobType) amJobName else pmJobName
-            val triggerKey = TriggerKey.triggerKey(jobName, triggerGroupName)
+        private fun scheduler(cron: String, id: String, title: String) {
+            val triggerKey = TriggerKey.triggerKey(id, triggerGroupName)
             val trigger = schedulerFactory.scheduler.getTrigger(triggerKey)
             val jobDetail = JobBuilder.newJob(NotificationJob::class.java)
-                .withIdentity(jobName, triggerGroupName)
+                .withIdentity(id, triggerGroupName)
                 .build()
             trigger?.let {
-                update(triggerKey, trigger as CronTrigger, cron, jobType)
-            } ?: create(triggerKey, cron, jobType, jobDetail)
+                update(triggerKey, trigger as CronTrigger, cron, title)
+            } ?: create(triggerKey, cron, title, jobDetail)
         }
 
         private fun deleteSchedule(jobKey: JobKey) {
             schedulerFactory.scheduler.deleteJob(jobKey)
         }
 
-        fun schedule(notice: Notice) {
-            when (notice.tab) {
-                Tab.NO -> {
-                    deleteSchedule(JobKey.jobKey(amJobName, triggerGroupName))
-                    deleteSchedule(JobKey.jobKey(pmJobName, triggerGroupName))
-                }
-                Tab.ALL -> {
-                    scheduler(notice.cron(TabType.AM), TabType.AM)
-                    scheduler(notice.cron(TabType.PM), TabType.PM)
-                }
-                Tab.AM -> {
-                    scheduler(notice.cron(TabType.AM), TabType.AM)
-                    deleteSchedule(JobKey.jobKey(pmJobName, triggerGroupName))
-                }
-                Tab.PM -> {
-                    deleteSchedule(JobKey.jobKey(amJobName, triggerGroupName))
-                    scheduler(notice.cron(TabType.PM), TabType.PM)
+        fun schedule(notice: Notice, tabs: Tabs) {
+            tabs.tabSet.forEach { tab ->
+                if (tab.notice) {
+                    val id = "notification_" + tab.openingTime.uniqueId
+                    deleteSchedule(JobKey.jobKey(id, triggerGroupName))
+                    scheduler(notice.corn(tab.openingTime.closeTime), id, tab.title)
                 }
             }
         }
@@ -103,42 +86,27 @@ class NotificationScheduler {
  */
 class OrderAutomaticScheduler {
     companion object {
-        private const val amJobName: String = "AM_ORDER_AUTOMATIC_JOB"
-        private const val pmJobName: String = "PM_ORDER_AUTOMATIC_JOB"
-
-        private fun scheduler(cron: String, jobType: TabType) {
-            val jobName = if (TabType.AM == jobType) amJobName else pmJobName
-            val triggerKey = TriggerKey.triggerKey(jobName, triggerGroupName)
+        private fun scheduler(cron: String, id: String, title: String) {
+            val triggerKey = TriggerKey.triggerKey(id, triggerGroupName)
             val trigger = schedulerFactory.scheduler.getTrigger(triggerKey)
             val jobDetail = JobBuilder.newJob(OrderAutomaticJob::class.java)
-                .withIdentity(jobName, triggerGroupName)
+                .withIdentity(id, triggerGroupName)
                 .build()
             trigger?.let {
-                update(triggerKey, trigger as CronTrigger, cron, jobType)
-            } ?: create(triggerKey, cron, jobType, jobDetail)
+                update(triggerKey, trigger as CronTrigger, cron, title)
+            } ?: create(triggerKey, cron, title, jobDetail)
         }
 
         private fun deleteSchedule(jobKey: JobKey) {
             schedulerFactory.scheduler.deleteJob(jobKey)
         }
 
-        fun schedule(order: Order) {
-            when (order.automatic) {
-                Automatic.NO -> {
-                    deleteSchedule(JobKey.jobKey(amJobName, triggerGroupName))
-                    deleteSchedule(JobKey.jobKey(pmJobName, triggerGroupName))
-                }
-                Automatic.ALL -> {
-                    scheduler(order.cron(TabType.AM), TabType.AM)
-                    scheduler(order.cron(TabType.PM), TabType.PM)
-                }
-                Automatic.AM -> {
-                    scheduler(order.cron(TabType.AM), TabType.AM)
-                    deleteSchedule(JobKey.jobKey(pmJobName, triggerGroupName))
-                }
-                Automatic.PM -> {
-                    deleteSchedule(JobKey.jobKey(amJobName, triggerGroupName))
-                    scheduler(order.cron(TabType.PM), TabType.PM)
+        fun schedule(order: Order, tabs: Tabs) {
+            tabs.tabSet.forEach { tab ->
+                if (tab.automatic) {
+                    val id = "order_" + tab.openingTime.uniqueId
+                    deleteSchedule(JobKey.jobKey(id, triggerGroupName))
+                    scheduler(order.corn(tab.openingTime.closeTime), id, tab.title)
                 }
             }
         }

@@ -42,6 +42,7 @@ class MeiCanClient {
     private val connectionManager: PoolingHttpClientConnectionManager =
         PoolingHttpClientConnectionManager(60000, TimeUnit.MILLISECONDS)
     private val httpClient: HttpClient
+    private var isVerified = false
 
     init {
         connectionManager.maxTotal = 10
@@ -52,6 +53,10 @@ class MeiCanClient {
         this.username = settings.account.username
         this.password = settings.account.getPassword()
         login()
+    }
+
+    fun isVerified(): Boolean {
+        return isVerified
     }
 
     /**
@@ -84,6 +89,7 @@ class MeiCanClient {
                 if (!loginVO.isSuccess) {
                     throw MeiCanLoginException(loginVO.errorDescription)
                 }
+                isVerified = true
             } catch (e: IOException) {
                 throw MeiCanLoginException(e)
             }
