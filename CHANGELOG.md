@@ -3,6 +3,7 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+## [0.3.0]
 ### Added
 - Support more tab options
 ### Changed
