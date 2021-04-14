@@ -58,7 +58,7 @@ private const val MEICAN_SERVICE_NAME = "ITMOTUI.MEI_CAN"
  * Account
  */
 class Account constructor(
-    var username: String = "",
+    var username: String? = null,
     var verification: Boolean = false
 ) {
     private var _password: String? by PasswordSafeDelegate(MEICAN_SERVICE_NAME, username)
@@ -78,7 +78,7 @@ class Account constructor(
      */
     @Transient
     fun isVerified(): Boolean {
-        return username.isNotBlank() and getPassword().isNotBlank() and verification
+        return username?.isNotBlank() == true and getPassword().isNotBlank() and verification
     }
 }
 

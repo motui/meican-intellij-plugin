@@ -74,25 +74,27 @@ class MeiCanClient {
      * 登录
      */
     private fun login() {
-        if (username?.isNotBlank() == true and (password?.isNotBlank() == true)) {
-            val parameters: MutableList<BasicNameValuePair> = ArrayList()
-            parameters.add(BasicNameValuePair("username", username))
-            parameters.add(BasicNameValuePair("username_type", "username"))
-            parameters.add(BasicNameValuePair("password", password))
-            parameters.add(BasicNameValuePair("meican_credential_type", "password"))
-            parameters.add(BasicNameValuePair("grant_type", "password"))
-            val urlParameter: MutableMap<String, Any> = urlParameter()
-            urlParameter["remember"] = true
-            try {
-                val responseStr = post(MEI_CAN_URL_LOGIN, urlParameter, parameters)
-                val loginVO = JsonUtil.from(responseStr, LoginVO::class.java)
-                if (!loginVO.isSuccess) {
-                    throw MeiCanLoginException(loginVO.errorDescription)
-                }
+        if (username.isNullOrBlank() || password.isNullOrBlank()) {
+            return
+        }
+        val parameters: MutableList<BasicNameValuePair> = ArrayList()
+        parameters.add(BasicNameValuePair("username", username))
+        parameters.add(BasicNameValuePair("username_type", "username"))
+        parameters.add(BasicNameValuePair("password", password))
+        parameters.add(BasicNameValuePair("meican_credential_type", "password"))
+        parameters.add(BasicNameValuePair("grant_type", "password"))
+        val urlParameter: MutableMap<String, Any> = urlParameter()
+        urlParameter["remember"] = true
+        try {
+            val responseStr = post(MEI_CAN_URL_LOGIN, urlParameter, parameters)
+            val loginVO = JsonUtil.from(responseStr, LoginVO::class.java)
+            if (loginVO.isSuccess) {
                 isVerified = true
-            } catch (e: IOException) {
-                throw MeiCanLoginException(e)
+            } else {
+                throw MeiCanLoginException(loginVO.errorDescription)
             }
+        } catch (e: IOException) {
+            throw MeiCanLoginException(e)
         }
     }
 
