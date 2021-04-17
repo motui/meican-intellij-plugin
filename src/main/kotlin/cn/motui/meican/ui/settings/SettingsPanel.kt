@@ -125,7 +125,7 @@ class SettingsPanel(val settings: Settings) : SettingForm() {
                 val tab = settings.tabs.get(tabData.title)
                 val tabItem = TabItem(
                     tabData,
-                    JBCheckBox(null, tab?.show ?: false),
+                    JBCheckBox(null, tab?.show ?: true),
                     JBCheckBox(null, tab?.notice ?: false),
                     JBCheckBox(null, tab?.automatic ?: false)
                 )

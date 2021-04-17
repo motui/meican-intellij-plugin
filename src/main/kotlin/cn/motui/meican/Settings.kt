@@ -134,7 +134,7 @@ class Order constructor(
 class Tab constructor(
     var title: String = "",
     var openingTime: OpeningTime = OpeningTime(),
-    var show: Boolean = false,
+    var show: Boolean = true,
     var notice: Boolean = false,
     var automatic: Boolean = false
 )

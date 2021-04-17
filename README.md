@@ -1,4 +1,10 @@
-# meican-intellij-plugin
+<div align="center">
+    <a href="https://plugins.jetbrains.com/plugin/15969-mei-can">
+        <img src="./src/main/resources/META-INF/pluginIcon.svg" width="320" height="320" alt="logo"/>
+    </a>
+</div>
+<h1 align="center">Intellij Mei Can</h1>
+<p align="center">Mei Can plugin for IntelliJ based IDEs.</p>
 
 ![Build](https://github.com/motui/meican-intellij-plugin/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/15969.svg)](https://plugins.jetbrains.com/plugin/15969)
@@ -22,14 +28,27 @@
 - 设置午餐晚餐截止时间前提醒
     - 如果已经订餐提醒订单信息
     - 如果未订餐提醒订餐
-- 设置自动订餐
-    
-    自动订餐为随机，地址默认第一个
+- 设置自动订餐 自动订餐为随机，地址默认第一个
 
 ### 规划
-- [ ] 自动订餐策略 
+
+- [ ] 扩展自动订餐策略
+
+## 兼容性
+IntelliJ IDEA, PhpStorm, WebStorm, PyCharm, RubyMine, AppCode, CLion, Gogland, DataGrip, Rider, MPS, Android Studio
+
+## 赞助
+
+Development powered by [JetBrains](https://www.jetbrains.com/?from=).
+
+[![https://www.jetbrains.com/?from=MeiCanIntellijPlugin](./images/jetbrains.svg)](https://www.jetbrains.com/?from=MeiCanIntellijPlugin)
+
+Whichever technologies you use, there's a JetBrains tool to match.
 
 ## 安装
+
+<script defer src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js">
+</script>
 
 - 使用 IDE 内置插件系统安装:
 
@@ -46,7 +65,8 @@
 ## 使用指南
 
 1. 在设置页面设置账号信息和配置提醒
-   ![setting](./images/settings.png)
+   ![setting](images/setting_default.png)
+   ![setting](images/setting_account.png)
 
 2. 在功能工具栏查看订餐面板
    ![toolWindow](./images/core_setting.png)
@@ -62,7 +82,7 @@
 
 6. 查看订单
    ![order](./images/cancel_order.png)
-   ![cancel order](./images/order_closed.png)
+   ![order](./images/order_close.png)
 
 说明：以上图示仅是演示效果，实际使用按照插件界面为准
 
