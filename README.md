@@ -39,7 +39,7 @@ IntelliJ IDEA, PhpStorm, WebStorm, PyCharm, RubyMine, AppCode, CLion, Gogland, D
 
 ## 赞助
 
-Development powered by [JetBrains](https://www.jetbrains.com/?from=).
+Development powered by [JetBrains](https://www.jetbrains.com/?from=MeiCanIntellijPlugin).
 
 [![https://www.jetbrains.com/?from=MeiCanIntellijPlugin](./images/jetbrains.svg)](https://www.jetbrains.com/?from=MeiCanIntellijPlugin)
 
@@ -47,7 +47,9 @@ Whichever technologies you use, there's a JetBrains tool to match.
 
 ## 安装
 
-<iframe frameborder="none" width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/15969"></iframe>
+<a href="https://plugins.jetbrains.com/embeddable/install/15969">
+<img src="./images/install.png" alt="install mei can plugin" width="300"/>
+</a>
 
 - 使用 IDE 内置插件系统安装:
 
