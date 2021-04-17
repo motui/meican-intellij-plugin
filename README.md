@@ -47,8 +47,7 @@ Whichever technologies you use, there's a JetBrains tool to match.
 
 ## 安装
 
-<script defer src="https://plugins.jetbrains.com/assets/scripts/mp-widget.js">
-</script>
+<iframe frameborder="none" width="245px" height="48px" src="https://plugins.jetbrains.com/embeddable/install/15969"></iframe>
 
 - 使用 IDE 内置插件系统安装:
 
