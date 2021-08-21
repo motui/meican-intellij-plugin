@@ -3,6 +3,9 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+### Added
+support 2021.2
+
 ## [0.3.0]
 ### Added
 - Support more tab options
