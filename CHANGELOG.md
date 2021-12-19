@@ -3,6 +3,7 @@
 # meican-intellij-plugin Changelog
 
 ## [Unreleased]
+support 2021.3
 ## [0.3.1]
 ### Added
 support 2021.2

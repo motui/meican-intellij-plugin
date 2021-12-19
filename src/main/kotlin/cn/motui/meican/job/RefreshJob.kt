@@ -26,7 +26,7 @@ class RefreshJob : Job {
                     }
                 }
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
     }
 
