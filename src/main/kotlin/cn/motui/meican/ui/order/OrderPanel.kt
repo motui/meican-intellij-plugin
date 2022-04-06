@@ -109,7 +109,7 @@ class OrderPanel : OrderWindowForm() {
     }
 
     inner class OpenSettingListener : LinkListener<String> {
-        override fun linkSelected(aSource: LinkLabel<*>?, aLinkData: String?) {
+        override fun linkSelected(aSource: LinkLabel<String>?, aLinkData: String?) {
             OptionsConfigurable.showSettingsDialog(null)
         }
     }
