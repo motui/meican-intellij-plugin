@@ -5,8 +5,6 @@ package cn.motui.meican.util
 import cn.motui.meican.HTML_DESCRIPTION_SETTINGS
 import cn.motui.meican.ui.settings.OptionsConfigurable
 import com.intellij.notification.Notification
-import com.intellij.notification.NotificationDisplayType
-import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationListener
 import com.intellij.notification.NotificationType
