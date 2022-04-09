@@ -4,8 +4,8 @@ import cn.motui.meican.model.ui.OpeningTime
 import cn.motui.meican.ui.settings.Cycle
 import cn.motui.meican.ui.settings.NoticeTime
 import cn.motui.meican.util.PasswordSafeDelegate
+import cn.motui.meican.util.application
 import com.intellij.openapi.components.PersistentStateComponent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
@@ -47,7 +47,7 @@ class Settings : PersistentStateComponent<Settings> {
 
     companion object {
         val instance: Settings
-            get() = ServiceManager.getService(Settings::class.java)
+            get() = application.getService(Settings::class.java)
     }
 }
 

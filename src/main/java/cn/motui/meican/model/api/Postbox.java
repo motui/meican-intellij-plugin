@@ -8,9 +8,6 @@ public class Postbox {
   private String postboxCode;
   private Long postboxOpenTime;
 
-  public Postbox() {
-  }
-
   public Postbox(String postboxCode, Long postboxOpenTime) {
     this.postboxCode = postboxCode;
     this.postboxOpenTime = postboxOpenTime;

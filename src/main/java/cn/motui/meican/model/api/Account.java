@@ -16,9 +16,6 @@ public class Account {
   private String email;
   private String userType;
 
-  public Account() {
-  }
-
   public Account(String uniqueId, String username, String email, String userType) {
     this.uniqueId = uniqueId;
     this.username = username;

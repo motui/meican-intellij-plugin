@@ -7,6 +7,7 @@ import cn.motui.meican.ui.settings.OptionsConfigurable
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationListener
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
@@ -22,20 +23,21 @@ object Notifications {
         message: String,
         vararg actions: AnAction
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup(displayId)
             .createNotification(
                 title,
                 message,
-                NotificationType.ERROR,
-                object : NotificationListener.Adapter() {
-                    override fun hyperlinkActivated(notification: Notification, event: HyperlinkEvent) {
-                        notification.expire()
-                        when (event.description) {
-                            HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(project)
-                        }
+                NotificationType.ERROR
+            )
+            .setListener(object : NotificationListener.Adapter() {
+                override fun hyperlinkActivated(notification: Notification, event: HyperlinkEvent) {
+                    notification.expire()
+                    when (event.description) {
+                        HTML_DESCRIPTION_SETTINGS -> OptionsConfigurable.showSettingsDialog(project)
                     }
                 }
-            )
+            })
             .apply { for (action in actions) addAction(action) }
             .show(project)
     }
@@ -47,8 +49,9 @@ object Notifications {
         type: NotificationType,
         project: Project? = null
     ) {
-        NotificationGroup(displayId, NotificationDisplayType.BALLOON, true)
-            .createNotification(title, message, type, null)
+        NotificationGroupManager.getInstance()
+            .getNotificationGroup(displayId)
+            .createNotification(title, message, type)
             .show(project)
     }
 
