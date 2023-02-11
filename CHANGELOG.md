@@ -4,10 +4,10 @@
 
 ## [Unreleased]
 
-## [0.3.5]
+## [0.3.5](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.3.5)
 Automatic support for the latest version
 
-## [0.3.4]
+## [0.3.4](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.3.4)
 
 ## [0.3.3](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.3.3)
 
