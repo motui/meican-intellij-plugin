@@ -4,8 +4,10 @@
 
 ## [Unreleased]
 
+## [0.3.5]
+Automatic support for the latest version
+
 ## [0.3.4]
-support 2022.2
 
 ## [0.3.3](https://github.com/motui/meican-intellij-plugin/releases/tag/v0.3.3)
 
