@@ -32,7 +32,7 @@ dependencies {
     implementation("org.quartz-scheduler:quartz:2.3.2") {
         exclude("org.slf4j", "slf4j-api")
     }
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.7.21")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:1.8.20")
 }
 
 // Configure gradle-intellij-plugin plugin.
